@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${application.spring.datasource.url}
+    username: ${application.spring.datasource.username}
+    password: ${application.spring.datasource.password}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
