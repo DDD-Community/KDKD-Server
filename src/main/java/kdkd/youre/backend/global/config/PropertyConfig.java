@@ -1,4 +1,4 @@
-package kdkd.youre.backend.common.config;
+package kdkd.youre.backend.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
