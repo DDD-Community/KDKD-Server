@@ -1,7 +1,7 @@
-package kdkd.youre.backend.domain.member.web;
+package kdkd.youre.backend.domain.member.presentation;
 
 import kdkd.youre.backend.domain.member.service.MemberService;
-import kdkd.youre.backend.domain.member.web.dto.response.MemberFindResponse;
+import kdkd.youre.backend.domain.member.presentation.dto.response.MemberFindResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,4 +24,6 @@ public class MemberController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
 }

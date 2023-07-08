@@ -1,8 +1,8 @@
 package kdkd.youre.backend.domain.member.service;
 
-import kdkd.youre.backend.domain.member.repository.Member;
-import kdkd.youre.backend.domain.member.repository.MemberRepository;
-import kdkd.youre.backend.domain.member.web.dto.response.MemberFindResponse;
+import kdkd.youre.backend.domain.member.domain.Member;
+import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
+import kdkd.youre.backend.domain.member.presentation.dto.response.MemberFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

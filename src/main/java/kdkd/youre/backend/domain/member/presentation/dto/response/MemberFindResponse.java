@@ -1,4 +1,4 @@
-package kdkd.youre.backend.domain.member.web.dto.response;
+package kdkd.youre.backend.domain.member.presentation.dto.response;
 
 import lombok.*;
 
