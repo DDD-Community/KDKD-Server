@@ -21,14 +21,21 @@ public class Member {
     private String oauthProvider; // oAuth Provider (google)
     private String loginId; // 로컬 로그인용. username 역할
     private String password; // 로컬 로그인용
+    private String role;
 
     @Builder
     public Member(
             String nickname,
             String email,
-            String oauthProvider) {
+            String oauthProvider,
+            String loginId,
+            String password,
+            String role ) {
         this.nickname = nickname;
         this.email = email;
         this.oauthProvider = oauthProvider;
+        this.loginId = loginId;
+        this.password = password;
+        this.role = role;
     }
 }
