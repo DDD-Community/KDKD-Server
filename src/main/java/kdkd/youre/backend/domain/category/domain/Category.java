@@ -1,10 +1,7 @@
-package kdkd.youre.backend.domain.category.repository;
+package kdkd.youre.backend.domain.category.domain;
 
 import kdkd.youre.backend.domain.member.repository.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,7 +9,9 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
     @Id

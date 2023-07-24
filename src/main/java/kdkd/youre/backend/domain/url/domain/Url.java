@@ -1,11 +1,10 @@
-package kdkd.youre.backend.domain.url.repository;
+package kdkd.youre.backend.domain.url.domain;
 
-import kdkd.youre.backend.domain.category.repository.Category;
+import kdkd.youre.backend.domain.category.domain.Category;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 
 
 import javax.persistence.*;
@@ -44,4 +43,5 @@ public class Url {
         this.tag = tag;
         this.category = category;
     }
+
 }
