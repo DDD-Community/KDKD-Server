@@ -1,6 +1,8 @@
 package kdkd.youre.backend.domain.auth.presentation;
 
 import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthJoinRequest;
+import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginRequest;
+import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginResponse;
 import kdkd.youre.backend.domain.auth.service.AuthService;
 import kdkd.youre.backend.global.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,15 @@ public class AuthController {
     public ResponseEntity<IdResponse> join(@RequestBody AuthJoinRequest request) {
 
         IdResponse response = authService.join(request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 일반 로그인 (테스트용)
+    @PostMapping("login")
+    public ResponseEntity<AuthLoginResponse> login(@RequestBody AuthLoginRequest request) {
+
+        AuthLoginResponse response = authService.login(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
