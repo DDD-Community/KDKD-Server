@@ -44,7 +44,7 @@ public class JwtTokenProvider {
     }
 
     // accessToken 생성
-    private String generateAccessToken(String loginId, String role) {
+    public String generateAccessToken(String loginId, String role) {
 
         Claims claims = Jwts.claims().setSubject(loginId); // JWT payload에 저장되는 정보 단위
         claims.put("role", role);
@@ -55,7 +55,7 @@ public class JwtTokenProvider {
     }
 
     // refreshToken 생성
-    private String generateRefreshToken(String loginId) {
+    public String generateRefreshToken(String loginId) {
 
         Claims claims = Jwts.claims().setSubject(loginId);
         Date issuedAt = new Date();
