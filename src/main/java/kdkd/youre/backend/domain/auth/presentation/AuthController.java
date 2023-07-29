@@ -4,7 +4,7 @@ import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthJoinRequest;
 import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginRequest;
 import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginResponse;
 import kdkd.youre.backend.domain.auth.service.AuthService;
-import kdkd.youre.backend.global.dto.response.IdResponse;
+import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

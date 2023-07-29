@@ -6,7 +6,7 @@ import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginResponse
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.refresh_token.service.RefreshTokenService;
-import kdkd.youre.backend.global.dto.response.IdResponse;
+import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import kdkd.youre.backend.global.security.JwtTokenProvider;

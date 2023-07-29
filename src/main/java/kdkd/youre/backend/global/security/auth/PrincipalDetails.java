@@ -1,5 +1,6 @@
 package kdkd.youre.backend.global.security.auth;
 
+import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,14 +12,13 @@ import java.util.Collections;
 
 @Getter
 @AllArgsConstructor
-public class AuthDetails implements UserDetails {
+public class PrincipalDetails implements UserDetails {
 
-    private String loginId;
-    private String role;
+    private Member member;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(role));
+        return Collections.singleton(new SimpleGrantedAuthority(member.getRole()));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return loginId;
+        return member.getLoginId();
     }
 
     @Override
