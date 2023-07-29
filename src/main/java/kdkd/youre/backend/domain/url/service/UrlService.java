@@ -26,10 +26,10 @@ public class UrlService {
     @Transactional(readOnly = true)
     public UrlCheckResponse checkUrl(String url) {
 
-        boolean urlDuplicate = urlRepository.existsByUrl(url);
+        boolean urlCheck = urlRepository.existsByUrl(url);
 
         UrlCheckResponse response = UrlCheckResponse.builder()
-                .urlCheck(urlDuplicate)
+                .urlCheck(urlCheck)
                 .build();
 
         return response;

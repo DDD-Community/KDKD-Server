@@ -9,9 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
     @Id
