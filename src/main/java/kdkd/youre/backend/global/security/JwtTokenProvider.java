@@ -28,11 +28,6 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    // 토큰 유효시간 30분
-    private long accessTokenValidTime = Duration.ofMinutes(30).toMillis();
-    // 리프레시 토큰 유효시간 2주
-    private long refreshTokenValidTime = Duration.ofDays(14).toMillis();
-
     private String buildToken(Claims claims, Date issuedAt, Date TokenExpiresIn, String key) {
 
         return Jwts.builder()
@@ -49,7 +44,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(loginId); // JWT payload에 저장되는 정보 단위
         claims.put("role", role);
         Date issuedAt = new Date();
-        Date TokenExpiresIn = new Date(issuedAt.getTime() + accessTokenValidTime);
+        Date TokenExpiresIn = new Date(issuedAt.getTime() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME);
 
         return buildToken(claims, issuedAt, TokenExpiresIn, secretKey);
     }
@@ -59,7 +54,7 @@ public class JwtTokenProvider {
 
         Claims claims = Jwts.claims().setSubject(loginId);
         Date issuedAt = new Date();
-        Date TokenExpiresIn = new Date(issuedAt.getTime() + refreshTokenValidTime);
+        Date TokenExpiresIn = new Date(issuedAt.getTime() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME);
 
         return buildToken(claims, issuedAt, TokenExpiresIn, refreshSecretKey);
     }
