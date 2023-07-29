@@ -18,7 +18,7 @@ public class UrlController {
     private final UrlService urlService;
 
     @GetMapping("/url-check")
-    public ResponseEntity<UrlCheckResponse> checkUrlsDuplication(@RequestParam String url) {
+    public ResponseEntity<UrlCheckResponse> checkUrl(@RequestParam String url) {
 
         UrlCheckResponse response = urlService.checkUrl(url);
         return ResponseEntity.ok().body(response);
