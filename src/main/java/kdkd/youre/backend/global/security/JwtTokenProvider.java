@@ -59,8 +59,8 @@ public class JwtTokenProvider {
         return buildToken(claims, issuedAt, TokenExpiresIn, refreshSecretKey);
     }
 
-    // accessToken에서 userPk(loginId) 추출
-    public String getLoginId(String token) {
+    // accessToken에서 username(loginId) 추출
+    public String getUsernameFromToken(String token) {
 
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
