@@ -1,11 +1,7 @@
 package kdkd.youre.backend.domain.category.domain;
 
 import kdkd.youre.backend.domain.member.domain.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import javax.persistence.*;
 
 @Entity
