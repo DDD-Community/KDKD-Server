@@ -35,7 +35,7 @@ public class UrlService {
         return response;
     }
 
-    public UrlSaveResponse add(UrlRequest request) {
+    public UrlSaveResponse saveUrl(UrlRequest request) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));

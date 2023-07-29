@@ -2,9 +2,6 @@ package kdkd.youre.backend.domain.category.domain;
 
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 
 @Entity

@@ -1,6 +1,5 @@
 package kdkd.youre.backend.domain.url.presentation;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
@@ -26,10 +25,9 @@ public class UrlController {
     }
 
     @PostMapping("")
-    @JsonProperty("comment")
     public ResponseEntity<UrlSaveResponse> saveUrl(@RequestBody UrlRequest request) {
 
-        UrlSaveResponse response = urlService.add(request);
+        UrlSaveResponse response = urlService.saveUrl(request);
         return ResponseEntity.ok().body(response);
     }
 }
