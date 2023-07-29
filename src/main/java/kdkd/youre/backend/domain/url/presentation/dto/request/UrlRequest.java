@@ -3,7 +3,6 @@ package kdkd.youre.backend.domain.url.presentation.dto.request;
 import lombok.*;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

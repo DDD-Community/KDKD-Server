@@ -43,5 +43,4 @@ public class Url {
         this.tag = tag;
         this.category = category;
     }
-
 }

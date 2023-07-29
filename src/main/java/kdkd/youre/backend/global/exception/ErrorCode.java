@@ -15,7 +15,14 @@ public enum ErrorCode {
     // Member 예외
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
     UNAUTHORIZED_ID(HttpStatus.UNAUTHORIZED, "아이디가 틀립니다."),
-    UNAUTHORIZED_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 틀립니다.");
+    UNAUTHORIZED_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 틀립니다."),
+
+    // Url 예외
+    EXIST_USER_EMAIL(HttpStatus.NOT_FOUND, "해당 이메일을 찾을 수 없습니다."),
+    NOT_FOUND_CATEGROY(HttpStatus.NOT_FOUND, "해당 카테고리가 없습니다.");
+
+
+
 
     private final HttpStatus httpStatus;
     private final String detail;

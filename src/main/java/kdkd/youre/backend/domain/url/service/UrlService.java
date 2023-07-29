@@ -5,6 +5,10 @@ import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
+import kdkd.youre.backend.global.exception.CustomException;
+import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,30 +26,41 @@ public class UrlService {
     private final CategoryRepository categoryRepository;
 
 
-    // 1. url 중복체크f
+    // 1. url 중복체크
     @Transactional(readOnly = true)
-    public boolean checkUrlDuplication(String url) {
+    public UrlFindResponse checkUrlDuplication(String url) {
 
         boolean urlDuplicate = urlRepository.existsByUrl(url);
-        return urlDuplicate;
+
+//        if (urlRepository.existsByUrl(url)) {
+//            throw new CustomException(ErrorCode.EXIST_USER_EMAIL);
+//        }
+
+        UrlFindResponse response = UrlFindResponse.builder()
+                .urlCheck(urlDuplicate)
+                .build();
+
+        return response;
     }
 
     // 2. url 저장
-    public Url add(UrlRequest request) {
+    public UrlSaveResponse add(UrlRequest request) {
 
-        Optional<Category> category = categoryRepository.findById(request.getCategoryId());
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
 
-        if(!category.isEmpty()){
-            Url url = Url.builder()
-                    .url(request.getUrl())
-                    .title(request.getTitle())
-                    .category(category.get())
-                    .build();
-            return urlRepository.save(url);
-        }
+        Url url = Url.builder()
+                .url(request.getUrl())
+                .title(request.getTitle())
+                .category(category)
+                .build();
+        urlRepository.save(url);
 
-        // 에러로 던지기
-        return null;
+        UrlSaveResponse response = UrlSaveResponse.builder()
+                .urlId(url.getId())
+                .build();
+
+        return response;
     }
 
 }

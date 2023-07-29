@@ -21,23 +21,24 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("urls")
 public class UrlController {
     //서비스
     private final UrlService urlService;
 
-    @GetMapping("/urls/url-check")
+    @GetMapping("/url-check")
     public ResponseEntity<UrlFindResponse> checkUrlsDuplication(@RequestParam String url) {
         log.info("중복체크");
-        return ResponseEntity.ok(new UrlFindResponse(urlService.checkUrlDuplication(url)));
+
+        UrlFindResponse response = urlService.checkUrlDuplication(url);
+        return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/urls")
+    @PostMapping("")
     @JsonProperty("comment")
-    public ResponseEntity<UrlSaveResponse> saveUrls(@RequestBody UrlRequest request) {
+    public ResponseEntity<UrlSaveResponse> saveUrl(@RequestBody UrlRequest request) {
 
-        log.info("URL저장");
-        Url result = urlService.add(request);
-
-        return ResponseEntity.ok(new UrlSaveResponse(result.getId()));
+        UrlSaveResponse response = urlService.add(request);
+        return ResponseEntity.ok().body(response);
     }
 }
