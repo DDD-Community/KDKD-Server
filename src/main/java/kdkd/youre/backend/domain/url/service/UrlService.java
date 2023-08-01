@@ -4,6 +4,7 @@ import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlDeleteRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
@@ -52,5 +53,11 @@ public class UrlService {
                 .build();
 
         return response;
+    }
+
+    public void deleteUrl(UrlDeleteRequest request) {
+        if (!urlRepository.existsById(request.getUrlId())) {
+            throw new CustomException(ErrorCode.NOT_UNAUTHORIZED_URL);
+        } else this.urlRepository.deleteById(request.getUrlId());
     }
 }
