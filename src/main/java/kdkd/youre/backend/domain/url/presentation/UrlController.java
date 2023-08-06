@@ -37,9 +37,7 @@ public class UrlController {
     }
 
     @DeleteMapping("")
-//    public ResponseEntity<?> deleteUrl(@AuthenticationPrincipal PrincipalDetails principalDetails,
     public ResponseEntity<?> deleteUrl(@RequestBody UrlDeleteRequest request) {
-        log.info("삭제 api ");
         this.urlService.deleteUrl(request);
         return ResponseEntity.ok().build();
     }
