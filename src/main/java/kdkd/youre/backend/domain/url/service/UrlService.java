@@ -57,7 +57,7 @@ public class UrlService {
 
     public void deleteUrl(UrlDeleteRequest request) {
         if (!urlRepository.existsById(request.getUrlId())) {
-            throw new CustomException(ErrorCode.NOT_UNAUTHORIZED_URL);
+            throw new CustomException(ErrorCode.NOT_FOUND_URL);
         } else this.urlRepository.deleteById(request.getUrlId());
     }
 }
