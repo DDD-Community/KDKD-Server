@@ -1,14 +1,15 @@
 ---
 name: "⚡ Fix"
 about: 버그, 오류 해결 이슈 템플릿
-title: ''
-labels: bug
+title: "⚡ "
+labels: bug/error
 assignees: ''
 
 ---
 
-## 🦾  Fix Description
+## 📌 Description
+- 
 
-## 📝  To-do
-- [ ]
+## 📝 To-do
+- [ ] 
 - [ ]
