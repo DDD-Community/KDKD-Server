@@ -1,6 +1,6 @@
 package kdkd.youre.backend.domain.url.presentation;
 
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
@@ -25,7 +25,7 @@ public class UrlController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UrlSaveResponse> saveUrl(@RequestBody UrlRequest request) {
+    public ResponseEntity<UrlSaveResponse> saveUrl(@RequestBody UrlSaveRequest request) {
 
         UrlSaveResponse response = urlService.saveUrl(request);
         return ResponseEntity.ok().body(response);

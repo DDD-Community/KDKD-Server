@@ -4,7 +4,7 @@ import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -35,7 +35,7 @@ public class UrlService {
         return response;
     }
 
-    public UrlSaveResponse saveUrl(UrlRequest request) {
+    public UrlSaveResponse saveUrl(UrlSaveRequest request) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));

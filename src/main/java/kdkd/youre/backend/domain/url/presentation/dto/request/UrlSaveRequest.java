@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class UrlRequest {
+public class UrlSaveRequest {
 
     private String url;
     private String title;
