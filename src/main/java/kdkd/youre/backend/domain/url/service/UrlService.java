@@ -1,6 +1,5 @@
 package kdkd.youre.backend.domain.url.service;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.member.domain.Member;

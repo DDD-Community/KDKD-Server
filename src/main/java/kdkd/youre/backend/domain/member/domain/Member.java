@@ -10,7 +10,8 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -31,7 +32,7 @@ public class Member {
             String oauthProvider,
             String loginId,
             String password,
-            String role ) {
+            String role) {
         this.nickname = nickname;
         this.email = email;
         this.oauthProvider = oauthProvider;
@@ -44,9 +45,10 @@ public class Member {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
     @Override
-    public boolean equals(Object obj){
-        if(this == obj) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
         if (obj == null || !(obj instanceof Member)) {
