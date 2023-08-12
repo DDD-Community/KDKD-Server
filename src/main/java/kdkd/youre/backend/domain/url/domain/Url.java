@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import javax.persistence.*;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,10 +19,10 @@ public class Url {
     private Long id;
 
     private String url; // url 주소
-    private String title; //url 타이틀
+    private String name; //url 이름
     private String thumbnail; // 썸네일 이미지
     private String memo; // 메모
-    private String tag; // 태그
+    private Boolean isWatchedLater; // 나중에 보기 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -31,16 +31,16 @@ public class Url {
     @Builder
     public Url(
             String url,
-            String title,
+            String name,
             String thumbnail,
             String memo,
-            String tag,
+            Boolean isWatchedLater,
             Category category) {
         this.url = url;
-        this.title = title;
+        this.name = name;
         this.thumbnail = thumbnail;
         this.memo = memo;
-        this.tag = tag;
+        this.isWatchedLater = isWatchedLater;
         this.category = category;
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 public class UrlSaveRequest {
 
     private String url;
-    private String title;
+    private String name;
     private Long categoryId;
     private String categoryName;
 }

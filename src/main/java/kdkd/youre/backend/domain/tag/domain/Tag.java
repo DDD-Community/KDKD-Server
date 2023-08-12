@@ -24,6 +24,8 @@ public class Tag {
     @JoinColumn(name = "url_id")
     private Url url;
 
+    // TODO: User 도메인이랑 ManyToOne 관계 형성
+
     @Builder
     public Tag(String name, Url url) {
         this.name = name;

@@ -42,7 +42,7 @@ public class UrlService {
 
         Url url = Url.builder()
                 .url(request.getUrl())
-                .title(request.getTitle())
+                .name(request.getName())
                 .category(category)
                 .build();
         urlRepository.save(url);
