@@ -37,7 +37,7 @@ public class UrlController {
     public ResponseEntity<?> deleteUrl(@PathVariable Long urlId,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        urlService.deleteUrl(urlId, principalDetails.getMember().getId());
+        urlService.deleteUrl(urlId, principalDetails.getMember());
         return ResponseEntity.noContent().build();
     }
 }

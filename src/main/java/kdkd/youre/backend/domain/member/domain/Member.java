@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.member.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -38,4 +39,21 @@ public class Member {
         this.password = password;
         this.role = role;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof Member)) {
+            return false;
+        }
+        Member member = (Member) obj;
+        return Objects.equals(id, member.getId());
+    }
+
 }

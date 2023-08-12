@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.url.service;
 import com.sun.tools.jconsole.JConsoleContext;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
@@ -57,16 +58,16 @@ public class UrlService {
         return response;
     }
 
-    public void deleteUrl(Long urlId, Long userId) {
+    public void deleteUrl(Long urlId, Member member) {
 
-        Category category = urlRepository.findById(urlId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY)).getCategory();
+        Url url = urlRepository.findById(urlId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        ValidateUrlOwnerShip(category, userId);
+        ValidateUrlOwnerShip(url, member);
         this.urlRepository.deleteById(urlId);
     }
-    public void ValidateUrlOwnerShip(Category category, Long userId) {
-        if(!category.isPublishedBy(userId))
-            throw new CustomException(ErrorCode.FORBIDDEN_USER);
+    public void ValidateUrlOwnerShip(Url url, Member member) {
+        if(!url.isPublishedBy(member))
+            throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 }

@@ -26,7 +26,7 @@ public class Category {
         this.member = member;
     }
 
-    public Boolean isPublishedBy(Long userId) {
-        return this.member.getId().equals(userId);
+    public Boolean isPublishedBy(Member member) {
+        return this.member.equals(member);
     }
 }

@@ -19,9 +19,9 @@ public enum ErrorCode {
 
     // Url 예외
     EXIST_USER_EMAIL(HttpStatus.NOT_FOUND, "해당 이메일을 찾을 수 없습니다."),
-    NOT_FOUND_CATEGROY(HttpStatus.NOT_FOUND, "해당 카테고리가 없습니다."),
-    NOT_FOUND_URL(HttpStatus.NOT_FOUND, "해당 URL ID가 없습니다."),
-    FORBIDDEN_USER(HttpStatus.UNAUTHORIZED,"해당 자원에 대한 접근 권한이 없습니다." );
+    NOT_FOUND_CATEGROY(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
+    NOT_FOUND_URL(HttpStatus.NOT_FOUND, "해당 url을 찾을 수 없습니다."),
+    FORBIDDEN_MEMBER(HttpStatus.UNAUTHORIZED,"해당 자원에 대한 접근 권한이 없습니다." );
 
     private final HttpStatus httpStatus;
     private final String detail;
