@@ -2,11 +2,11 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class UrlService {
         return response;
     }
 
-    public UrlSaveResponse saveUrl(UrlSaveRequest request) {
+    public IdResponse saveUrl(UrlSaveRequest request) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
@@ -47,8 +47,8 @@ public class UrlService {
                 .build();
         urlRepository.save(url);
 
-        UrlSaveResponse response = UrlSaveResponse.builder()
-                .urlId(url.getId())
+        IdResponse response = IdResponse.builder()
+                .id(url.getId())
                 .build();
 
         return response;
