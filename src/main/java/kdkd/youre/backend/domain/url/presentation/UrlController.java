@@ -36,9 +36,11 @@ public class UrlController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteUrl(@RequestBody UrlDeleteRequest request) {
-        this.urlService.deleteUrl(request);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteUrl(@PathVariable Long id,
+                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        this.urlService.deleteUrl(id, principalDetails.getMember().getId());
+        return ResponseEntity.noContent().build();
     }
 }

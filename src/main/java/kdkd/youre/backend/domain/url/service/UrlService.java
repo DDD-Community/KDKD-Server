@@ -2,6 +2,8 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.member.domain.Member;
+import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlDeleteRequest;
@@ -23,6 +25,7 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public UrlCheckResponse checkUrl(String url) {
@@ -43,7 +46,7 @@ public class UrlService {
 
         Url url = Url.builder()
                 .url(request.getUrl())
-                .title(request.getTitle())
+                .name(request.getTitle())
                 .category(category)
                 .build();
         urlRepository.save(url);
@@ -55,9 +58,9 @@ public class UrlService {
         return response;
     }
 
-    public void deleteUrl(UrlDeleteRequest request) {
-        if (!urlRepository.existsById(request.getUrlId())) {
-            throw new CustomException(ErrorCode.NOT_FOUND_URL);
-        } else this.urlRepository.deleteById(request.getUrlId());
+    public void deleteUrl(Long urlId, Long id) {
+        memberRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.PERMISSION_DENIED));
+        this.urlRepository.deleteById(urlId);
     }
 }

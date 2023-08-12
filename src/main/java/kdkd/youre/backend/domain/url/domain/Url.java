@@ -19,7 +19,7 @@ public class Url {
     private Long id;
 
     private String url; // url 주소
-    private String title; //url 타이틀
+    private String name; //url 타이틀
     private String thumbnail; // 썸네일 이미지
     private String memo; // 메모
     private String tag; // 태그
@@ -31,13 +31,13 @@ public class Url {
     @Builder
     public Url(
             String url,
-            String title,
+            String name,
             String thumbnail,
             String memo,
             String tag,
             Category category) {
         this.url = url;
-        this.title = title;
+        this.name = name;
         this.thumbnail = thumbnail;
         this.memo = memo;
         this.tag = tag;
