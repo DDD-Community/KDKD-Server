@@ -1,7 +1,5 @@
 package kdkd.youre.backend.domain.url.presentation;
 
-import kdkd.youre.backend.domain.member.presentation.dto.response.MemberFindResponse;
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlDeleteRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
@@ -9,7 +7,6 @@ import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +33,11 @@ public class UrlController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteUrl(@PathVariable Long id,
+    @DeleteMapping("{urlId}")
+    public ResponseEntity<?> deleteUrl(@PathVariable Long urlId,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        this.urlService.deleteUrl(id, principalDetails.getMember().getId());
+        urlService.deleteUrl(urlId, principalDetails.getMember().getId());
         return ResponseEntity.noContent().build();
     }
 }

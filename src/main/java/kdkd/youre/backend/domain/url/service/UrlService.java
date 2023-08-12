@@ -2,11 +2,9 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
-import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlDeleteRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
@@ -46,7 +44,7 @@ public class UrlService {
 
         Url url = Url.builder()
                 .url(request.getUrl())
-                .name(request.getTitle())
+                .title(request.getTitle())
                 .category(category)
                 .build();
         urlRepository.save(url);
