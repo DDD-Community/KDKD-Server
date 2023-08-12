@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.url.domain;
 
 import kdkd.youre.backend.domain.category.domain.Category;
+import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 
 import javax.persistence.*;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,5 +44,9 @@ public class Url {
         this.memo = memo;
         this.tag = tag;
         this.category = category;
+    }
+
+    public Boolean isPublishedBy(Member member) {
+        return this.getCategory().isPublishedBy(member);
     }
 }

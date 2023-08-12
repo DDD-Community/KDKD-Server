@@ -4,9 +4,11 @@ import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
+import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +31,13 @@ public class UrlController {
 
         UrlSaveResponse response = urlService.saveUrl(request);
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("{urlId}")
+    public ResponseEntity<?> deleteUrl(@PathVariable Long urlId,
+                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        urlService.deleteUrl(urlId, principalDetails.getMember());
+        return ResponseEntity.noContent().build();
     }
 }

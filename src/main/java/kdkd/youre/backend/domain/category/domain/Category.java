@@ -2,6 +2,7 @@ package kdkd.youre.backend.domain.category.domain;
 
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,5 +25,9 @@ public class Category {
     public Category(String title, Member member) {
         this.title = title;
         this.member = member;
+    }
+
+    public Boolean isPublishedBy(Member member) {
+        return this.member.equals(member);
     }
 }

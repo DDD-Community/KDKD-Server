@@ -3,13 +3,15 @@ package kdkd.youre.backend.domain.member.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -30,7 +32,7 @@ public class Member {
             String oauthProvider,
             String loginId,
             String password,
-            String role ) {
+            String role) {
         this.nickname = nickname;
         this.email = email;
         this.oauthProvider = oauthProvider;
@@ -38,4 +40,22 @@ public class Member {
         this.password = password;
         this.role = role;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof Member)) {
+            return false;
+        }
+        Member member = (Member) obj;
+        return Objects.equals(id, member.getId());
+    }
+
 }
