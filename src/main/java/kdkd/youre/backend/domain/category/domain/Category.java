@@ -25,4 +25,8 @@ public class Category {
         this.title = title;
         this.member = member;
     }
+
+    public Boolean isPublishedBy(Long userId) {
+        return this.member.getId().equals(userId);
+    }
 }
