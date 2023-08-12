@@ -62,11 +62,12 @@ public class UrlService {
         Url url = urlRepository.findById(urlId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        ValidateUrlOwnerShip(url, member);
+        validateUrlOwnerShip(url, member);
         this.urlRepository.deleteById(urlId);
     }
-    public void ValidateUrlOwnerShip(Url url, Member member) {
-        if(!url.isPublishedBy(member))
+
+    public void validateUrlOwnerShip(Url url, Member member) {
+        if (!url.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 }
