@@ -28,9 +28,10 @@ public class UrlController {
     }
 
     @PostMapping("")
-    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request) {
+    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
+                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        IdResponse response = urlService.saveUrl(request);
+        IdResponse response = urlService.saveUrl(request, principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 
