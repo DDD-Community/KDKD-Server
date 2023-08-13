@@ -7,7 +7,7 @@ import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
@@ -27,15 +27,13 @@ public class UrlService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public UrlCheckResponse checkUrl(String url) {
+    public UrlAddressCheckResponse checkUrlAddress(String address) {
 
-        boolean urlCheck = urlRepository.existsByUrl(url);
+        boolean isDuplicated = urlRepository.existsByUrlAddress(address);
 
-        UrlCheckResponse response = UrlCheckResponse.builder()
-                .urlCheck(urlCheck)
+        return UrlAddressCheckResponse.builder()
+                .isDuplicated(isDuplicated)
                 .build();
-
-        return response;
     }
 
     public UrlSaveResponse saveUrl(UrlRequest request) {
@@ -44,8 +42,8 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
 
         Url url = Url.builder()
-                .url(request.getUrl())
-                .title(request.getTitle())
+                .urlAddress(request.getUrl())
+                .name(request.getTitle())
                 .category(category)
                 .build();
         urlRepository.save(url);
