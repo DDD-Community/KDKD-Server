@@ -3,12 +3,11 @@ package kdkd.youre.backend.domain.url.service;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.member.domain.Member;
-import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
+import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public UrlAddressCheckResponse checkUrlAddress(String address) {
@@ -36,20 +34,26 @@ public class UrlService {
                 .build();
     }
 
-    public UrlSaveResponse saveUrl(UrlRequest request) {
+    public IdResponse saveUrl(UrlSaveRequest request) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
 
         Url url = Url.builder()
-                .urlAddress(request.getUrl())
-                .name(request.getTitle())
+                .urlAddress(request.getUrlAddress())
+                .name(request.getName())
+                .thumbnail(request.getThumbnail())
+                .memo(request.getMemo())
+                .isWatchedLater(request.getIsWatcedLater())
                 .category(category)
                 .build();
+
         urlRepository.save(url);
 
-        UrlSaveResponse response = UrlSaveResponse.builder()
-                .urlId(url.getId())
+        // TODO: 태그 저장 필요
+
+        IdResponse response = IdResponse.builder()
+                .id(url.getId())
                 .build();
 
         return response;
