@@ -2,9 +2,11 @@ package kdkd.youre.backend.domain.url.presentation;
 
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
+import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
+
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +31,9 @@ public class UrlController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UrlSaveResponse> saveUrl(@RequestBody UrlRequest request) {
+    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request) {
 
-        UrlSaveResponse response = urlService.saveUrl(request);
+        IdResponse response = urlService.saveUrl(request);
         return ResponseEntity.ok().body(response);
     }
 
