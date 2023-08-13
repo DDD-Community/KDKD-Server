@@ -2,11 +2,13 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.member.domain.Member;
+import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +24,15 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public UrlCheckResponse checkUrl(String url) {
+    public UrlAddressCheckResponse checkUrlAddress(String address) {
 
-        boolean urlCheck = urlRepository.existsByUrl(url);
+        boolean isDuplicated = urlRepository.existsByUrlAddress(address);
 
-        UrlCheckResponse response = UrlCheckResponse.builder()
-                .urlCheck(urlCheck)
+        return UrlAddressCheckResponse.builder()
+                .isDuplicated(isDuplicated)
                 .build();
 
         return response;
@@ -41,8 +44,8 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
 
         Url url = Url.builder()
-                .url(request.getUrl())
-                .name(request.getName())
+                .urlAddress(request.getUrl())
+                .name(request.getTitle())
                 .category(category)
                 .build();
         urlRepository.save(url);
@@ -52,5 +55,19 @@ public class UrlService {
                 .build();
 
         return response;
+    }
+
+    public void deleteUrl(Long urlId, Member member) {
+
+        Url url = urlRepository.findById(urlId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
+        validateUrlOwnerShip(url, member);
+        this.urlRepository.deleteById(urlId);
+    }
+
+    public void validateUrlOwnerShip(Url url, Member member) {
+        if (!url.isPublishedBy(member))
+            throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 }

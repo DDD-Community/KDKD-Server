@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.tag.domain;
 
+import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.url.domain.Url;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,11 +25,14 @@ public class Tag {
     @JoinColumn(name = "url_id")
     private Url url;
 
-    // TODO: User 도메인이랑 ManyToOne 관계 형성
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder
-    public Tag(String name, Url url) {
+    public Tag(String name, Url url, Member member) {
         this.name = name;
         this.url = url;
+        this.member = member;
     }
 }
