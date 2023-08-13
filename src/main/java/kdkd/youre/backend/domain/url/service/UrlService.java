@@ -3,7 +3,6 @@ package kdkd.youre.backend.domain.url.service;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.member.domain.Member;
-import kdkd.youre.backend.domain.member.domain.repository.MemberRepository;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
@@ -41,11 +40,17 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
 
         Url url = Url.builder()
-                .urlAddress(request.getUrl())
+                .urlAddress(request.getUrlAddress())
                 .name(request.getName())
+                .thumbnail(request.getThumbnail())
+                .memo(request.getMemo())
+                .isWatchedLater(request.getIsWatcedLater())
                 .category(category)
                 .build();
+
         urlRepository.save(url);
+
+        // TODO: 태그 저장 필요
 
         IdResponse response = IdResponse.builder()
                 .id(url.getId())
