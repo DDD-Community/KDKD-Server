@@ -24,7 +24,6 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public UrlAddressCheckResponse checkUrlAddress(String address) {
@@ -34,8 +33,6 @@ public class UrlService {
         return UrlAddressCheckResponse.builder()
                 .isDuplicated(isDuplicated)
                 .build();
-
-        return response;
     }
 
     public IdResponse saveUrl(UrlSaveRequest request) {
@@ -45,7 +42,7 @@ public class UrlService {
 
         Url url = Url.builder()
                 .urlAddress(request.getUrl())
-                .name(request.getTitle())
+                .name(request.getName())
                 .category(category)
                 .build();
         urlRepository.save(url);
