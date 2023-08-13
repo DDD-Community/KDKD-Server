@@ -2,12 +2,14 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryDto;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
+
 
     @Transactional(readOnly = true)
     public UrlAddressCheckResponse checkUrlAddress(String address) {
@@ -72,12 +75,16 @@ public class UrlService {
 
         Url url = urlRepository.findById(urlId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
         validateUrlOwnerShip(url, member);
 
         return UrlFindResponse.builder()
-                .url(url.getUrl())
-                .tag(url.getTag())
-                .name(url.getTitle())
+                .urlAddress(url.getUrlAddress())
+                .name(url.getName())
+                .thumbnail(url.getThumbnail())
+                .category(CategoryDto.from(url.getCategory()))
+                .memo(url.getMemo())
+                .isWatchedLater(url.getIsWatchedLater())
                 .build();
     }
 

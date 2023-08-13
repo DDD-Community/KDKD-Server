@@ -15,15 +15,28 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-    private String title; // 디렉토리 이름
+    private String name; // 디렉토리 이름
+    private Long position; //디렉토리 순서
+    private Long depth; //디렉토리 깊이
+    private Boolean isBookmarked; //즐겨찾기 여부
+    private Long parentId; // 상위 카테고리 고유 번호
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 회원 고유 번호
 
     @Builder
-    public Category(String title, Member member) {
-        this.title = title;
+    public Category(String name,
+                    Long position,
+                    Long depth,
+                    Boolean isBookmarked,
+                    Long parentId,
+                    Member member) {
+        this.name = name;
+        this.position = position;
+        this.depth = depth;
+        this.isBookmarked = isBookmarked;
+        this.parentId = parentId;
         this.member = member;
     }
 

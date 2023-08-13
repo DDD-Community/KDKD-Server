@@ -1,11 +1,9 @@
 package kdkd.youre.backend.domain.url.presentation;
 
-import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
@@ -49,9 +47,7 @@ public class UrlController {
     public ResponseEntity<UrlFindResponse> findUrl(@PathVariable Long urlId,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        // 조회 APi
         UrlFindResponse response = urlService.findUrl(urlId, principalDetails.getMember());
-
         return ResponseEntity.ok().body(response);
     }
 }

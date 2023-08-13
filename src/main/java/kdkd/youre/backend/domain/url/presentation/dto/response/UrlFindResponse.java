@@ -1,17 +1,22 @@
 package kdkd.youre.backend.domain.url.presentation.dto.response;
 
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryDto;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Builder
 public class UrlFindResponse {
-    private String url;
+    private String urlAddress;
     private String name;
     private String thumbnail;
-    private String category;
-    private String tag;
+    private CategoryDto category;
+    private List<String> tag;
     private String memo;
-    private String isWatchedLater;
-
+    private Boolean isWatchedLater;
 }
+
+
+
