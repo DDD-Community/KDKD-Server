@@ -8,6 +8,7 @@ import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlCheckResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlSaveResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
@@ -64,6 +65,19 @@ public class UrlService {
 
         validateUrlOwnerShip(url, member);
         this.urlRepository.deleteById(urlId);
+    }
+
+    public UrlFindResponse findUrl(Long urlId, Member member) {
+
+        Url url = urlRepository.findById(urlId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+        validateUrlOwnerShip(url, member);
+
+        return UrlFindResponse.builder()
+                .url(url.getUrl())
+                .tag(url.getTag())
+                .name(url.getTitle())
+                .build();
     }
 
     public void validateUrlOwnerShip(Url url, Member member) {
