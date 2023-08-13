@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @Builder
-public class UrlCheckResponse {
+public class UrlAddressCheckResponse {
 
-    private boolean urlCheck;
+    private boolean isDuplicated;
 }
