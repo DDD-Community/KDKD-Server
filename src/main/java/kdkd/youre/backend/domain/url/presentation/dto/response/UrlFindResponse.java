@@ -4,7 +4,7 @@ import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryDto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Getter
 @Builder
@@ -13,7 +13,7 @@ public class UrlFindResponse {
     private String name;
     private String thumbnail;
     private CategoryDto category;
-    private List<String> tag;
+    private ArrayList<?> tag;
     private String memo;
     private Boolean isWatchedLater;
 }

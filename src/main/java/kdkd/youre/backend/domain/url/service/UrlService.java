@@ -5,6 +5,8 @@ import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryDto;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
+import kdkd.youre.backend.domain.tag.domain.Tag;
+import kdkd.youre.backend.domain.tag.domain.repository.TagRepository;
 import kdkd.youre.backend.domain.tag.service.TagService;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
@@ -18,6 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +32,7 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final TagService tagService;
 
 
@@ -79,13 +86,17 @@ public class UrlService {
         Url url = urlRepository.findById(urlId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        validateUrlOwnerShip(url, member);
+        List<Tag> tags = tagRepository.findByUrl_Id(urlId);
+        List<String> tagNames = tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
 
         return UrlFindResponse.builder()
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
                 .category(CategoryDto.from(url.getCategory()))
+                .tag((ArrayList<?>) tagNames)
                 .memo(url.getMemo())
                 .isWatchedLater(url.getIsWatchedLater())
                 .build();
@@ -97,7 +108,7 @@ public class UrlService {
     }
 
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
-        if(!category.isPublishedBy(member))
+        if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 }
