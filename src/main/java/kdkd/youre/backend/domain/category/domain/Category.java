@@ -19,7 +19,10 @@ public class Category {
     private Long position; //디렉토리 순서
     private Long depth; //디렉토리 깊이
     private Boolean isBookmarked; //즐겨찾기 여부
-    private Long parentId; // 상위 카테고리 고유 번호
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parent; // 상위 카테고리 고유 번호
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -30,13 +33,13 @@ public class Category {
                     Long position,
                     Long depth,
                     Boolean isBookmarked,
-                    Long parentId,
+                    Category parent,
                     Member member) {
         this.name = name;
         this.position = position;
         this.depth = depth;
         this.isBookmarked = isBookmarked;
-        this.parentId = parentId;
+        this.parent = parent;
         this.member = member;
     }
 

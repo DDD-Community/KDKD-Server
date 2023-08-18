@@ -2,7 +2,6 @@ package kdkd.youre.backend.domain.url.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
-import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryDto;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.tag.domain.Tag;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,7 +84,7 @@ public class UrlService {
         Url url = urlRepository.findById(urlId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        List<Tag> tags = tagRepository.findByUrl_Id(urlId);
+        List<Tag> tags = tagRepository.findByUrl(url);
         List<String> tagNames = tags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
@@ -95,8 +93,8 @@ public class UrlService {
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
-                .category(CategoryDto.from(url.getCategory()))
-                .tag((ArrayList<?>) tagNames)
+                .categoryId(url.getCategory().getId())
+                .tag(tagNames)
                 .memo(url.getMemo())
                 .isWatchedLater(url.getIsWatchedLater())
                 .build();
