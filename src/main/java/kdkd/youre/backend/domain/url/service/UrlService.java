@@ -10,6 +10,7 @@ import kdkd.youre.backend.domain.tag.service.TagService;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -68,6 +69,20 @@ public class UrlService {
                 .build();
 
         return response;
+    }
+
+    public void updateUrl(Long urlId, UrlUpdateRequest request, Member member) {
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
+
+        validateCategoryOwnerShip(category, member);
+
+        Url url = urlRepository.findById(urlId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
+        url.updateUrl(request, category);
+        // TODO: 태그 업데이트 로직 추가 구현 필요
     }
 
     public void deleteUrl(Long urlId, Member member) {
