@@ -31,9 +31,8 @@ public class UrlController {
 
     // url 저장
     @PostMapping("")
-    public ResponseEntity<IdResponse> saveUrl(
-            @RequestBody UrlSaveRequest request,
-            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
+                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         IdResponse response = urlService.saveUrl(request, principalDetails.getMember()); // TODO: Membmer가 연관관계 필드를 갖게 되면 member 새로 찾아오는 로직 추가 필요함
         return ResponseEntity.ok().body(response);
@@ -41,10 +40,9 @@ public class UrlController {
 
     // url 수정
     @PatchMapping("{urlId}")
-    public ResponseEntity<Void> updateUrl(
-            @PathVariable Long urlId,
-            @RequestBody UrlUpdateRequest request,
-            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<Void> updateUrl(@PathVariable Long urlId,
+                                          @RequestBody UrlUpdateRequest request,
+                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         urlService.updateUrl(urlId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
