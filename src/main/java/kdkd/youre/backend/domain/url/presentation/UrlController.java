@@ -4,6 +4,7 @@ import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckRe
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,10 @@ public class UrlController {
     }
 
     @PostMapping("")
-    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request) {
+    public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
+                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        IdResponse response = urlService.saveUrl(request);
+        IdResponse response = urlService.saveUrl(request, principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 
@@ -40,5 +42,13 @@ public class UrlController {
 
         urlService.deleteUrl(urlId, principalDetails.getMember());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{urlId}")
+    public ResponseEntity<UrlFindResponse> findUrl(@PathVariable Long urlId,
+                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        UrlFindResponse response = urlService.findUrl(urlId, principalDetails.getMember());
+        return ResponseEntity.ok().body(response);
     }
 }

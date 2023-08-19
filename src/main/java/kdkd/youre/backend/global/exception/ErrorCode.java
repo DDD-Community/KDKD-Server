@@ -22,7 +22,7 @@ public enum ErrorCode {
     NOT_FOUND_CATEGROY(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
     NOT_FOUND_URL(HttpStatus.NOT_FOUND, "해당 url을 찾을 수 없습니다."),
     FORBIDDEN_MEMBER(HttpStatus.UNAUTHORIZED, "해당 자원에 대한 접근 권한이 없습니다."),
-
+    NOT_FOUND_TAG(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다.");
     // Category 예외
     CONFLICT_CATEGORY(HttpStatus.CONFLICT,"해당 카테고리가 중복됩니다." );
 
