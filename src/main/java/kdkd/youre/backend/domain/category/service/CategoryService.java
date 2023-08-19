@@ -18,20 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public Category saveCategory(CategorySaveRequest request) {
+    public IdResponse saveCategory(CategorySaveRequest request) {
 
-//        Category category = categoryRepository.findByCategoryFullName(request.getName());
+        //카테고리 중복체크
+        Category category = categoryRepository.findByName(request.getName());
 
+        if (category != null) {
+            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
+        }
 
-//        Category Category.builder()
-//                .name(request.getName())
-//                .build();
-//
-//        IdResponse response = IdResponse.builder()
-//                .id(Category.getId())
-//                .build();
+        Category category1 = Category.builder()
+                .name(request.getName())
+                .build();
 
-//        categoryRepository.save(Category);
-        return null;
+        categoryRepository.save(category1);
+
+        return IdResponse.builder()
+                .id(category1.getId())
+                .build();
     }
 }

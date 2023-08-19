@@ -22,9 +22,8 @@ public class CategoryController {
     @PostMapping("")
     public ResponseEntity<IdResponse> saveCategory(@RequestBody CategorySaveRequest request) {
 
-//        IdResponse response = categoryService.saveCategory(request);
-
-//        return ResponseEntity.ok().body(response);
-    return null;
+        IdResponse response = categoryService.saveCategory(request);
+        return ResponseEntity.ok().body(response);
+//    return null;
     }
 }

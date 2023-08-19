@@ -3,9 +3,6 @@ package kdkd.youre.backend.domain.category.domain.repository;
 import kdkd.youre.backend.domain.category.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-        List<Category> findByCategoryFullName(String name);
+        Category findByName(String name);
 }

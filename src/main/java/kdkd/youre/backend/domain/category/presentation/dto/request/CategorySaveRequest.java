@@ -8,5 +8,5 @@ import java.util.List;
 @NoArgsConstructor
 public class CategorySaveRequest {
     private String name;
-    private Long categoryId;
+    private Long parentId;
 }
