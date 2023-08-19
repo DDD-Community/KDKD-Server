@@ -62,7 +62,7 @@ public class UrlService {
                 .build();
 
         urlRepository.save(url);
-        tagService.saveTagList(request.getTag(), url, member);
+        tagService.saveAllTag(request.getTag(), url, member);
 
         IdResponse response = IdResponse.builder()
                 .id(url.getId())
@@ -82,8 +82,7 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         url.updateUrl(request, category);
-
-        tagService.updateTagList(request.getTag(), url, member);
+        tagService.updateAllTag(request.getTag(), url, member);
     }
 
     public void deleteUrl(Long urlId, Member member) {
