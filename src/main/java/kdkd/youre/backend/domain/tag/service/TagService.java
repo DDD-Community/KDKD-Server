@@ -9,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +22,7 @@ public class TagService {
 
     public void saveTagList(List<String> tagNameList, Url url, Member member) {
 
-        if(tagNameList == null){
+        if (tagNameList == null) {
             return;
         }
 
@@ -44,31 +42,42 @@ public class TagService {
         // 현재 태그 목록 조회
         List<Tag> currentTags = tagRepository.findByUrl(url);
 
-        // 현재 태그 이름 리스트 (A)
-        Set<String> currentTagNames = new HashSet<>();
-        for(Tag tag : currentTags) {
-            currentTagNames.add(tag.getName());
-        }
-
-        // 들어온 태그 이름 리스트 (B)
-        if(tagNames == null) {
-            tagRepository.deleteAll(currentTags); // 들어온 태그 이름 리스트가 null인 경우 저장된 태그를 모두 삭제
+        // 들어온 태그 이름 리스트가 빈 배열인 경우 저장된 태그를 모두 삭제하고 early return
+        if(tagNames.isEmpty()) {
+            tagRepository.deleteAll(currentTags);
             return;
         }
+
+        // 현재 태그 이름 집합 (A)
+        Set<String> currentTagNames = Optional.ofNullable(currentTags)
+                .map(tags -> tags.stream()
+                        .map(Tag::getName)
+                        .collect(Collectors.toSet()))
+                .orElse(Collections.emptySet());
+
+        // 들어온 태그 이름 집합 (B)
         Set<String> incomingTagNames = new HashSet<>(tagNames);
 
-        // 존재하는 모든 태그 이름 리스트 -> A ∩ B
-        Set<String> existingTagNames  = new HashSet<>(currentTagNames);
+        // 존재하는 모든 태그 이름 집합 -> A ∩ B
+        Set<String> existingTagNames = new HashSet<>(currentTagNames);
         existingTagNames.retainAll(incomingTagNames);
 
-        // 삭제되는 태그 이름 리스트 -> A - B -> A - (A ∩ B)
+        // 삭제되는 태그 이름 집합 -> A - B -> A - (A ∩ B)
         Set<String> tagNamesToDelete = new HashSet<>(currentTagNames);
         tagNamesToDelete.removeAll(existingTagNames);
 
-        // 추가되는 태그 이름 리스트 -> B - A -> B - (A ∩ B)
+        // 추가되는 태그 이름 집합 -> B - A -> B - (A ∩ B)
         Set<String> tagNamesToAdd = new HashSet<>(incomingTagNames);
         tagNamesToAdd.removeAll(existingTagNames);
 
-        // TODO: 삭제, 추가 작업 필요
+        // 삭제
+        tagRepository.deleteAll(
+                currentTags.stream()
+                        .filter(tag -> tagNamesToDelete.contains(tag.getName()))
+                        .collect(Collectors.toList())
+        );
+
+        // 추가
+        saveTagList((List<String>) tagNamesToAdd, url, member);
     }
 }

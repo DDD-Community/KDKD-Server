@@ -82,6 +82,7 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         url.updateUrl(request, category);
+
         tagService.updateTagList(request.getTag(), url, member);
     }
 
