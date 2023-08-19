@@ -87,7 +87,7 @@ public class UrlService {
         Url url = Optional.ofNullable(urlRepository.findByUrlAddressAndCategory_Member(address, member))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        List<Tag> tags = tagRepository.findByMemberIdAndUrlId(member.getId(), url.getId());
+        List<Tag> tags = tagRepository.findByMemberAndUrl(member, url);
         List<String> tagNames = tags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
