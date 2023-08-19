@@ -82,7 +82,7 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         url.updateUrl(request, category);
-        // TODO: 태그 업데이트 로직 추가 구현 필요
+        tagService.updateTagList(request.getTag(), url, member);
     }
 
     public void deleteUrl(Long urlId, Member member) {

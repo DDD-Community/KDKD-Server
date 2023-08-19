@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findByUrl(Url url);
+
+    Tag findByUrlAndName(Url url, String name);
 }
