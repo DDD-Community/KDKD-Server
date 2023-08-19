@@ -82,7 +82,9 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         url.updateUrl(request, category);
-        tagService.updateAllTag(request.getTag(), url, member);
+
+        tagService.deleteAllTag(url);
+        tagService.saveAllTag(request.getTag(), url, member);
     }
 
     public void deleteUrl(Long urlId, Member member) {

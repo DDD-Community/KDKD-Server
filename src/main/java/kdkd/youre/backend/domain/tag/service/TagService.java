@@ -37,10 +37,9 @@ public class TagService {
         tagRepository.saveAll(tags);
     }
 
-    public void updateAllTag(List<String> tagNames, Url url, Member member) {
+    public void deleteAllTag(Url url) {
 
         List<Tag> tags = tagRepository.findByUrl(url);
         tagRepository.deleteAll(tags);
-        saveAllTag(tagNames, url, member);
     }
 }
