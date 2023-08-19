@@ -8,6 +8,8 @@ import java.util.List;
 @Getter
 @Builder
 public class UrlFindResponse {
+
+    private Boolean isFirst;
     private String urlAddress;
     private String name;
     private String thumbnail;
