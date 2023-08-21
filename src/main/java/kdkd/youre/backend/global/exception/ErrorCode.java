@@ -25,7 +25,8 @@ public enum ErrorCode {
     NOT_FOUND_TAG(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다."),
 
     // Category 예외
-    CONFLICT_CATEGORY(HttpStatus.CONFLICT,"해당 카테고리가 중복됩니다." );
+    CONFLICT_CATEGORY(HttpStatus.CONFLICT,"해당 카테고리가 중복됩니다." ),
+    NOT_FOUND_PARENTID(HttpStatus.NOT_FOUND, "해당 부모id가 없습니다.");
 
 
 

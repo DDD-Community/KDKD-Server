@@ -21,6 +21,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    //Category 저장
     @PostMapping("")
     public ResponseEntity<IdResponse> saveCategory(@RequestBody CategorySaveRequest request,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {

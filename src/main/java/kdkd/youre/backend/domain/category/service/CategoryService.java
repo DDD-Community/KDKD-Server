@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,28 +27,24 @@ public class CategoryService {
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
         //카테고리 중복체크
-        Category category = categoryRepository.findByName(request.getName());
+        Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
 
-        validateCategoryOwnerShip(category, member);
+        Category parentCategory = categoryRepository.findById(request.getParentId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PARENTID));
+        if (isDuplicated) {
+            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
+        }
 
-//        if (category != null) {
-//            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
-//        }
-
-        Category category1 = Category.builder()
+        Category category = Category.builder()
                 .name(request.getName())
+                .parent(parentCategory)
                 .member(member)
-                .parent(category)
                 .build();
 
-        categoryRepository.save(category1);
+        categoryRepository.save(category);
 
         return IdResponse.builder()
-                .id(category1.getId())
+                .id(category.getId())
                 .build();
-    }
-    public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
-        if (!category.isPublishedBy(member))
-            throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 }
