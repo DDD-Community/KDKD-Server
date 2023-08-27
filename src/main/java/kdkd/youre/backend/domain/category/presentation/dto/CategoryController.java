@@ -28,6 +28,5 @@ public class CategoryController {
 
         IdResponse response = categoryService.saveCategory(request, principalDetails.getMember());
         return ResponseEntity.ok().body(response);
-//    return null;
     }
 }

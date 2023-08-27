@@ -5,7 +5,6 @@ import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
-import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +21,16 @@ import java.util.Optional;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    private final UrlService urlService;
-
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
         //카테고리 중복체크
         Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
 
-        Category parentCategory = categoryRepository.findById(request.getParentId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PARENTID));
+        Category parentCategory = Optional.ofNullable(request.getParentId())
+                .map(id -> categoryRepository.findById(id)
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY)))
+                .orElse(null);
+
         if (isDuplicated) {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
