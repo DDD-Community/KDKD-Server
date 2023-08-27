@@ -38,7 +38,7 @@ public class UrlService {
     public IdResponse saveUrl(UrlSaveRequest request, Member member) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
         validateCategoryOwnerShip(category, member);
 
@@ -64,7 +64,7 @@ public class UrlService {
     public void updateUrl(Long urlId, UrlUpdateRequest request, Member member) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
         validateCategoryOwnerShip(category, member);
 

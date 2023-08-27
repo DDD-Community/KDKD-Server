@@ -1,0 +1,59 @@
+name: CICD
+
+on:
+  push:
+    branches: [ "develop" ]
+#  pull_request:
+#    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 기본 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Gradlew 실행 허용
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      # JDK 11 세팅
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      # 환경 변수 설정
+      - name: Set environment values
+        run: |
+          cd ./src/main/resources
+          touch ./env.properties
+          echo "${{ secrets.ENV_DEV }}" > ./env.properties
+        shell: bash
+      # Gradle build (Test 제외)
+      - name: Build with Gradle
+        run: ./gradlew clean build --exclude-task test
+      # Docker build
+      - name: Docker build
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker build -t kdkd .
+          docker tag kdkd ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+        # Deploy
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY_DEV }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+            sudo docker tag ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7} kdkd_spring
+            sudo docker-compose up -d
