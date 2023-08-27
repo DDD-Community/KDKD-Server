@@ -7,7 +7,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class UrlSaveRequest {
-
     private String urlAddress;
     private String name;
     private String thumbnail;
