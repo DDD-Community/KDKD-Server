@@ -37,3 +37,10 @@ jobs:
       # Gradle build (Test 제외)
       - name: Build with Gradle
         run: ./gradlew clean build --exclude-task test
+      # Docker build
+      - name: Docker build
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker build -t kdkd .
+          docker tag kdkd ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
