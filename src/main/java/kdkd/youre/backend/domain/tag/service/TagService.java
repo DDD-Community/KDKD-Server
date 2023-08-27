@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,13 +20,13 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public void saveTagList(List<String> tagNameList, Url url, Member member) {
+    public void saveAllTag(List<String> tagNames, Url url, Member member) {
 
-        if(tagNameList == null){
+        if (tagNames == null) {
             return;
         }
 
-        List<Tag> tagList = tagNameList.stream()
+        List<Tag> tags = tagNames.stream()
                 .map(name -> Tag.builder()
                         .name(name)
                         .url(url)
@@ -34,6 +34,12 @@ public class TagService {
                         .build())
                 .collect(Collectors.toList());
 
-        tagRepository.saveAll(tagList);
+        tagRepository.saveAll(tags);
+    }
+
+    public void deleteAllTag(Url url) {
+
+        List<Tag> tags = tagRepository.findByUrl(url);
+        tagRepository.deleteAll(tags);
     }
 }
