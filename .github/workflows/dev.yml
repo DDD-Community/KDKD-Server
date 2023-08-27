@@ -44,3 +44,16 @@ jobs:
           docker build -t kdkd .
           docker tag kdkd ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+        # Deploy
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY_DEV }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
+            sudo docker tag ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7} kdkd_spring
+            sudo docker-compose up -d
