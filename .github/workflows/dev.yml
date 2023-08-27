@@ -51,6 +51,7 @@ jobs:
           host: ${{ secrets.HOST_DEV }}
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY_DEV }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           envs: GITHUB_SHA
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kdkd:${GITHUB_SHA::7}
