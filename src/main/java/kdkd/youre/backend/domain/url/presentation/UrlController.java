@@ -1,7 +1,6 @@
 package kdkd.youre.backend.domain.url.presentation;
 
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 
@@ -22,13 +21,6 @@ public class UrlController {
 
     private final UrlService urlService;
 
-    @GetMapping("/check-address")
-    public ResponseEntity<UrlAddressCheckResponse> checkUrlAddress(@RequestParam String address) {
-
-        UrlAddressCheckResponse response = urlService.checkUrlAddress(address);
-        return ResponseEntity.ok().body(response);
-    }
-
     // url 저장
     @PostMapping("")
     public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
@@ -48,6 +40,7 @@ public class UrlController {
         return ResponseEntity.ok().build();
     }
 
+    //Url 삭제
     @DeleteMapping("{urlId}")
     public ResponseEntity<?> deleteUrl(@PathVariable Long urlId,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -56,11 +49,12 @@ public class UrlController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("{urlId}")
-    public ResponseEntity<UrlFindResponse> findUrl(@PathVariable Long urlId,
+    //Url 상세조회
+    @GetMapping("")
+    public ResponseEntity<UrlFindResponse> findUrl(@RequestParam String address,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        UrlFindResponse response = urlService.findUrl(urlId, principalDetails.getMember());
+        UrlFindResponse response = urlService.findUrl(address, principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 }

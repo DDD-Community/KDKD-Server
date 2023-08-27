@@ -20,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,17 +35,6 @@ public class UrlService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TagService tagService;
-
-
-    @Transactional(readOnly = true)
-    public UrlAddressCheckResponse checkUrlAddress(String address) {
-
-        boolean isDuplicated = urlRepository.existsByUrlAddress(address);
-
-        return UrlAddressCheckResponse.builder()
-                .isDuplicated(isDuplicated)
-                .build();
-    }
 
     public IdResponse saveUrl(UrlSaveRequest request, Member member) {
 
@@ -96,25 +87,39 @@ public class UrlService {
         this.urlRepository.deleteById(urlId);
     }
 
-    public UrlFindResponse findUrl(Long urlId, Member member) {
+    // url 상세 조회
+    public UrlFindResponse findUrl(String address, Member member) {
 
-        Url url = urlRepository.findById(urlId)
+        boolean isDuplicated = urlRepository.existsByUrlAddressAndCategory_Member(address, member);
+
+        UrlFindResponse.UrlFindResponseBuilder builder = UrlFindResponse.builder();
+
+        if (!isDuplicated) {
+            return builder.isFirst(true)
+                    .urlAddress("crawling urlAddress")
+                    .thumbnail("crawling thumbnail")
+                    .tag(Collections.emptyList())
+                    .isWatchedLater(false)
+                    .build();
+        }
+        Url url = Optional.ofNullable(urlRepository.findByUrlAddressAndCategory_Member(address, member))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        List<Tag> tags = tagRepository.findByUrl(url);
+        List<Tag> tags = tagRepository.findByMemberAndUrl(member, url);
         List<String> tagNames = tags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        return UrlFindResponse.builder()
+        builder.isFirst(false)
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
                 .categoryId(url.getCategory().getId())
                 .tag(tagNames)
                 .memo(url.getMemo())
-                .isWatchedLater(url.getIsWatchedLater())
-                .build();
+                .isWatchedLater(url.getIsWatchedLater());
+
+        return builder.build();
     }
 
     public void validateUrlOwnerShip(Url url, Member member) {
