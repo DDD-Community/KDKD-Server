@@ -1,6 +1,6 @@
 package kdkd.youre.backend.domain.url.service;
 
-import kdkd.youre.backend.domain.category.domain.Category;
+import  kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
@@ -11,7 +11,6 @@ import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlAddressCheckResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
