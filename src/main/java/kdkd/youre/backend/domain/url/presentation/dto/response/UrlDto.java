@@ -14,7 +14,6 @@ public class UrlDto {
     private String name;
     private String thumbnail;
     private Long categoryId;
-    //    private CategoryDto category;
     private List<String> tag;
     private String memo;
 
@@ -22,10 +21,9 @@ public class UrlDto {
         return UrlDto.builder()
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
-                .categoryId(url.getCategory().getId())
-//                .category(CategoryDto.from(url))
-                .tag(tagNames)
                 .thumbnail(url.getThumbnail())
+                .categoryId(url.getCategory().getId())
+                .tag(tagNames)
                 .memo(url.getMemo())
                 .build();
     }

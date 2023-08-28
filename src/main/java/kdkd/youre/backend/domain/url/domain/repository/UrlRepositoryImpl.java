@@ -11,7 +11,6 @@ import java.util.List;
 import static kdkd.youre.backend.domain.tag.domain.QTag.tag;
 import static kdkd.youre.backend.domain.url.domain.QUrl.url;
 
-@Repository
 @RequiredArgsConstructor
 public class UrlRepositoryImpl implements UrlCustomRepository {
 
