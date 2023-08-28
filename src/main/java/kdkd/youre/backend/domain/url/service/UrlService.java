@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -127,41 +126,13 @@ public class UrlService {
         return builder.build();
     }
 
-    // url 전체 목록 조회
-//    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
-//
-//        List<Url> urls = Optional.ofNullable(urlRepository.findByCategoryMember(member))
-//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
-//
-//        List<UrlDto> urlDto = urls.stream()
-//                .map(url -> {
-//                    List<Tag> tags = tagRepository.findTagsByUrlId(url.getId());
-//                    List<String> tagNames = tags.stream()
-//                            .map(Tag::getName)
-//                            .collect(Collectors.toList());
-//
-//                    return UrlDto.from(url, tagNames);
-//                })
-//                .collect(Collectors.toList());
-//
-//        return UrlFindAllResponse.builder()
-//                .totalCount(urlDto.size())
-//                .url(urlDto)
-//                .build();
-//    }
-
+    //전체목록조회
     public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
 
         List<Url> urls = Optional.ofNullable(urlRepository.findByCategoryMember(member))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-//        List<Url> searchList = urlRepository.findBySearchWord(params);
-        Stream<Url> urlStream = urls.stream();
-
-        // 검색조건
-//        if(params.getCategoryId() != null) {
-//            urlStream = urlStream.filter(url -> url.getCategory().getId().equals(params.getCategoryId()));
-//        }
+        List<Url> searchWord = urlRepository.findBySearchWord(params);
 
         Predicate<Url> categoryFilter = url -> params.getCategoryId() == null || url.getCategory().getId().equals(params.getCategoryId());
         Predicate<Url> watchedFilter = params.getIsWatched() != null ? url -> !params.getIsWatched() || url.getIsWatchedLater() : url -> true;
@@ -172,10 +143,9 @@ public class UrlService {
             urlComparator = urlComparator.reversed();
         }
 
-
-        List<UrlDto> urlDto = urlStream
+        List<UrlDto> urlDto = searchWord.stream()
                 .filter(categoryFilter.and(watchedFilter))
-                .sorted(urlComparator)  // Apply sorting here
+                .sorted(urlComparator)
                 .map(url -> {
                     List<Tag> tags = tagRepository.findTagsByUrlId(url.getId());
                     List<String> tagNames = tags.stream()
@@ -184,8 +154,8 @@ public class UrlService {
 
                     return UrlDto.from(url, tagNames);
                 })
-                .skip((params.getPageNo() - 1) * params.getPageSize())  // Calculate the starting index of the page
-                .limit(params.getPageSize())  // Limit the number of elements on the page
+                .skip((params.getPageNo() - 1) * params.getPageSize())
+                .limit(params.getPageSize())
                 .collect(Collectors.toList());
 
         return UrlFindAllResponse.builder()
@@ -193,7 +163,6 @@ public class UrlService {
                 .url(urlDto)
                 .build();
     }
-
 
     public void validateUrlOwnerShip(Url url, Member member) {
         if (!url.isPublishedBy(member))

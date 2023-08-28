@@ -7,12 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Getter
@@ -31,20 +27,11 @@ public class Url {
     private String memo; // 메모
     private Boolean isWatchedLater; // 나중에 보기 여부
 
-    // 일단추가
-//    @CreatedDate
-//    @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
-//    private Timestamp createdAt; // 등록일자
-//
-//    @LastModifiedDate
-//    @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
-//    private Timestamp updatedAt; //수정일자
-
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Timestamp createdAt; //등록일자
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Timestamp updatedAt; //수정일자
 
 
     @ManyToOne(fetch = FetchType.LAZY)
