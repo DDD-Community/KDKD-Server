@@ -9,17 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("members")
 public class MemberController {
 
     private final MemberService memberService;
 
     // 회원 정보 조회
-    @GetMapping("/members")
+    @GetMapping("me")
     public ResponseEntity<MemberFindResponse> findMember(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         MemberFindResponse response = memberService.findMember(principalDetails.getMember().getId());

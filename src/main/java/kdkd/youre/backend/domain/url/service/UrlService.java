@@ -11,6 +11,7 @@ import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlDto;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
@@ -43,7 +44,7 @@ public class UrlService {
     public IdResponse saveUrl(UrlSaveRequest request, Member member) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGROY));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
         validateCategoryOwnerShip(category, member);
 
@@ -57,13 +58,29 @@ public class UrlService {
                 .build();
 
         urlRepository.save(url);
-        tagService.saveTagList(request.getTag(), url, member);
+        tagService.saveAllTag(request.getTag(), url, member);
 
         IdResponse response = IdResponse.builder()
                 .id(url.getId())
                 .build();
 
         return response;
+    }
+
+    public void updateUrl(Long urlId, UrlUpdateRequest request, Member member) {
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        validateCategoryOwnerShip(category, member);
+
+        Url url = urlRepository.findById(urlId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
+        url.updateUrl(request, category);
+
+        tagService.deleteAllTag(url);
+        tagService.saveAllTag(request.getTag(), url, member);
     }
 
     public void deleteUrl(Long urlId, Member member) {
@@ -187,6 +204,4 @@ public class UrlService {
         if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
-
-
 }
