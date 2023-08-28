@@ -9,7 +9,10 @@ import kdkd.youre.backend.domain.tag.domain.repository.TagRepository;
 import kdkd.youre.backend.domain.tag.service.TagService;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlDto;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
@@ -19,9 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +110,74 @@ public class UrlService {
         return builder.build();
     }
 
+    // url 전체 목록 조회
+//    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
+//
+//        List<Url> urls = Optional.ofNullable(urlRepository.findByCategoryMember(member))
+//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+//
+//        List<UrlDto> urlDto = urls.stream()
+//                .map(url -> {
+//                    List<Tag> tags = tagRepository.findTagsByUrlId(url.getId());
+//                    List<String> tagNames = tags.stream()
+//                            .map(Tag::getName)
+//                            .collect(Collectors.toList());
+//
+//                    return UrlDto.from(url, tagNames);
+//                })
+//                .collect(Collectors.toList());
+//
+//        return UrlFindAllResponse.builder()
+//                .totalCount(urlDto.size())
+//                .url(urlDto)
+//                .build();
+//    }
+
+    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
+
+        List<Url> urls = Optional.ofNullable(urlRepository.findByCategoryMember(member))
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
+//        List<Url> searchList = urlRepository.findBySearchWord(params);
+        Stream<Url> urlStream = urls.stream();
+
+        // 검색조건
+//        if(params.getCategoryId() != null) {
+//            urlStream = urlStream.filter(url -> url.getCategory().getId().equals(params.getCategoryId()));
+//        }
+
+        Predicate<Url> categoryFilter = url -> params.getCategoryId() == null || url.getCategory().getId().equals(params.getCategoryId());
+        Predicate<Url> watchedFilter = params.getIsWatched() != null ? url -> !params.getIsWatched() || url.getIsWatchedLater() : url -> true;
+
+        Comparator<Url> urlComparator = Comparator.comparing(Url::getCreatedAt);
+
+        if ("desc".equalsIgnoreCase(params.getOrder())) {
+            urlComparator = urlComparator.reversed();
+        }
+
+
+        List<UrlDto> urlDto = urlStream
+                .filter(categoryFilter.and(watchedFilter))
+                .sorted(urlComparator)  // Apply sorting here
+                .map(url -> {
+                    List<Tag> tags = tagRepository.findTagsByUrlId(url.getId());
+                    List<String> tagNames = tags.stream()
+                            .map(Tag::getName)
+                            .collect(Collectors.toList());
+
+                    return UrlDto.from(url, tagNames);
+                })
+                .skip((params.getPageNo() - 1) * params.getPageSize())  // Calculate the starting index of the page
+                .limit(params.getPageSize())  // Limit the number of elements on the page
+                .collect(Collectors.toList());
+
+        return UrlFindAllResponse.builder()
+                .totalCount(urlDto.size())
+                .url(urlDto)
+                .build();
+    }
+
+
     public void validateUrlOwnerShip(Url url, Member member) {
         if (!url.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
@@ -113,4 +187,6 @@ public class UrlService {
         if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
+
+
 }
