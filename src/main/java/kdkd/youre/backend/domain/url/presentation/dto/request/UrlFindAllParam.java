@@ -12,6 +12,4 @@ public class UrlFindAllParam {
     private String urlKeyword;
     private Boolean isWatched;
     private String order;
-    private Long pageNo;
-    private Long pageSize;
 }

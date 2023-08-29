@@ -11,10 +11,12 @@ import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -64,9 +66,12 @@ public class UrlController {
     //Url 전체조회
     @GetMapping("/find")
     public ResponseEntity<UrlFindAllResponse> findAllUrl(@ModelAttribute UrlFindAllParam params,
-                                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                                         @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                         @RequestParam(defaultValue = "1") int pageNo,
+                                                         @RequestParam(defaultValue = "25") int pageSize) {
 
-        UrlFindAllResponse response = urlService.findAllUrl(params, principalDetails.getMember());
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        UrlFindAllResponse response = urlService.findAllUrl(params, principalDetails.getMember(), pageable);
 
         return ResponseEntity.ok().body(response);
     }

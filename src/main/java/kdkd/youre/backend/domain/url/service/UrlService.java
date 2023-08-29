@@ -22,11 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -127,25 +126,14 @@ public class UrlService {
     }
 
     //전체목록조회
-    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
+    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member, Pageable pageable) {
 
         List<Url> urls = Optional.ofNullable(urlRepository.findByCategory_Member(member))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
-        List<Url> searchWord = urlRepository.findBySearchWord(params);
-
-        Predicate<Url> categoryFilter = url -> params.getCategoryId() == null || url.getCategory().getId().equals(params.getCategoryId());
-        Predicate<Url> watchedFilter = params.getIsWatched() != null ? url -> !params.getIsWatched() || url.getIsWatchedLater() : url -> true;
-
-        Comparator<Url> urlComparator = Comparator.comparing(Url::getCreatedAt);
-
-        if ("desc".equalsIgnoreCase(params.getOrder())) {
-            urlComparator = urlComparator.reversed();
-        }
+        List<Url> searchWord = urlRepository.findBySearchWord(params, pageable);
 
         List<UrlDto> urlDto = searchWord.stream()
-                .filter(categoryFilter.and(watchedFilter))
-                .sorted(urlComparator)
                 .map(url -> {
                     List<Tag> tags = tagRepository.findByUrl(url);
                     List<String> tagNames = tags.stream()
@@ -154,8 +142,6 @@ public class UrlService {
 
                     return UrlDto.from(url, tagNames);
                 })
-                .skip((params.getPageNo() - 1) * params.getPageSize())
-                .limit(params.getPageSize())
                 .collect(Collectors.toList());
 
         return UrlFindAllResponse.builder()
