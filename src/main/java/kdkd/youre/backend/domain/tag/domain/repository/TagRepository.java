@@ -9,8 +9,5 @@ import java.util.List;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findByMemberAndUrl(Member member, Url url);
-
-    List<Tag> findTagsByUrlId(Long id);
-
     List<Tag> findByUrl(Url url);
 }

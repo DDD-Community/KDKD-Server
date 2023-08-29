@@ -129,7 +129,7 @@ public class UrlService {
     //전체목록조회
     public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member) {
 
-        List<Url> urls = Optional.ofNullable(urlRepository.findByCategoryMember(member))
+        List<Url> urls = Optional.ofNullable(urlRepository.findByCategory_Member(member))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         List<Url> searchWord = urlRepository.findBySearchWord(params);
@@ -147,7 +147,7 @@ public class UrlService {
                 .filter(categoryFilter.and(watchedFilter))
                 .sorted(urlComparator)
                 .map(url -> {
-                    List<Tag> tags = tagRepository.findTagsByUrlId(url.getId());
+                    List<Tag> tags = tagRepository.findByUrl(url);
                     List<String> tagNames = tags.stream()
                             .map(Tag::getName)
                             .collect(Collectors.toList());

@@ -13,6 +13,5 @@ public interface UrlRepository extends JpaRepository<Url, Long>, UrlCustomReposi
 
     Url findByUrlAddressAndCategory_Member(String address, Member member);
 
-    List<Url> findByCategoryMember(Member member);
-
+    List<Url> findByCategory_Member(Member member);
 }
