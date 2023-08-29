@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.url.domain;
 
 import kdkd.youre.backend.domain.category.domain.Category;
+import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
 import lombok.AccessLevel;
@@ -9,12 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Url {
+public class Url extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +27,6 @@ public class Url {
     private String memo; // 메모
     private Boolean isWatchedLater; // 나중에 보기 여부
 
-    @Column(name = "created_at")
-    private Timestamp createdAt; //등록일자
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt; //수정일자
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category; // category id
@@ -45,8 +38,6 @@ public class Url {
             String thumbnail,
             String memo,
             Boolean isWatchedLater,
-            Timestamp createdAt,
-            Timestamp updatedAt,
             Category category) {
         this.urlAddress = urlAddress;
         this.name = name;
@@ -54,12 +45,9 @@ public class Url {
         this.memo = memo;
         this.isWatchedLater = isWatchedLater;
         this.category = category;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Boolean isPublishedBy(Member member) {
-
         return this.getCategory().isPublishedBy(member);
     }
 
@@ -69,15 +57,5 @@ public class Url {
         this.category = category;
         this.memo = request.getMemo();
         this.isWatchedLater = request.getIsWatcedLater();
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Timestamp(System.currentTimeMillis());
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }
