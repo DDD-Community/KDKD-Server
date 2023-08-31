@@ -5,5 +5,6 @@ import kdkd.youre.backend.domain.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-        Boolean existsByNameAndMember(String name, Member member);
+    Boolean existsByNameAndMember(String name, Member member);
+
 }

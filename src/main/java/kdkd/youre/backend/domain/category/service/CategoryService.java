@@ -35,10 +35,20 @@ public class CategoryService {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
 
+        // position 부여
+        // 맨 아래에 가도록 설정
+         // 10000 부터 시작하고 만약에 20000 30000 있다면 그다음인 40000으로 설정되어야함
+
+//        Long position = categoryRepository.findDistinctMaxPositionByMember(member);
+//        System.out.println(position);
+
+
         Category category = Category.builder()
                 .name(request.getName())
                 .parent(parentCategory)
                 .member(member)
+                .depth(1L)
+                .isBookmarked(false)
                 .build();
 
         categoryRepository.save(category);
@@ -47,4 +57,5 @@ public class CategoryService {
                 .id(category.getId())
                 .build();
     }
+
 }
