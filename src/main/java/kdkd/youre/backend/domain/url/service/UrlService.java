@@ -1,6 +1,6 @@
 package kdkd.youre.backend.domain.url.service;
 
-import  kdkd.youre.backend.domain.category.domain.Category;
+import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
@@ -9,8 +9,11 @@ import kdkd.youre.backend.domain.tag.domain.repository.TagRepository;
 import kdkd.youre.backend.domain.tag.service.TagService;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlDto;
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -119,6 +123,31 @@ public class UrlService {
                 .isWatchedLater(url.getIsWatchedLater());
 
         return builder.build();
+    }
+
+    //전체목록조회
+    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member, Pageable pageable) {
+
+        List<Url> urls = Optional.ofNullable(urlRepository.findByCategory_Member(member))
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+
+        List<Url> searchWord = urlRepository.findBySearchWord(params, pageable);
+
+        List<UrlDto> urlDto = searchWord.stream()
+                .map(url -> {
+                    List<Tag> tags = tagRepository.findByUrl(url);
+                    List<String> tagNames = tags.stream()
+                            .map(Tag::getName)
+                            .collect(Collectors.toList());
+
+                    return UrlDto.from(url, tagNames);
+                })
+                .collect(Collectors.toList());
+
+        return UrlFindAllResponse.builder()
+                .totalCount(urlDto.size())
+                .url(urlDto)
+                .build();
     }
 
     public void validateUrlOwnerShip(Url url, Member member) {
