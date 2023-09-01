@@ -24,31 +24,26 @@ public class CategoryService {
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
         //카테고리 중복체크
+        // [TODO] parentId 체크 못함
         Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
-
-        Category parentCategory = Optional.ofNullable(request.getParentId())
-                .map(id -> categoryRepository.findById(id)
-                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY)))
-                .orElse(null);
 
         if (isDuplicated) {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
 
-        // position 부여
-        // 맨 아래에 가도록 설정
-         // 10000 부터 시작하고 만약에 20000 30000 있다면 그다음인 40000으로 설정되어야함
+//        Category parentCategory = categoryRepository.findById(request.getParentId())
+//                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
-//        Long position = categoryRepository.findDistinctMaxPositionByMember(member);
-//        System.out.println(position);
-
+        Long position = categoryRepository.findMaxPositionByMember(member);
+        Long newPosition = ((position / 10000L) + 1) * 10000L;
 
         Category category = Category.builder()
                 .name(request.getName())
-                .parent(parentCategory)
+//                .parent(new Category(request.getParentId()))
                 .member(member)
                 .depth(1L)
                 .isBookmarked(false)
+                .position(newPosition)
                 .build();
 
         categoryRepository.save(category);
@@ -57,5 +52,4 @@ public class CategoryService {
                 .id(category.getId())
                 .build();
     }
-
 }
