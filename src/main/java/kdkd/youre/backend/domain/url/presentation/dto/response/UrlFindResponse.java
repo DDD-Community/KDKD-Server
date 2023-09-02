@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class UrlFindResponse {
 
+    private Long urlId;
     private Boolean isSaved;
     private String urlAddress;
     private String name;

@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class UrlDto {
 
+    private Long urlId;
     private String urlAddress;
     private String name;
     private String thumbnail;
@@ -19,6 +20,7 @@ public class UrlDto {
 
     public static UrlDto from(Url url, List<String> tagNames) {
         return UrlDto.builder()
+                .urlId(url.getId())
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
