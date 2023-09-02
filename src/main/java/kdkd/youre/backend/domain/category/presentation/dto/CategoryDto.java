@@ -14,6 +14,7 @@ public class CategoryDto {
     public static CategoryDto from(Category category) {
         return CategoryDto.builder()
                 .categoryId(category.getId())
+                .fullName(category.getFullName())
                 .build();
     }
 }
