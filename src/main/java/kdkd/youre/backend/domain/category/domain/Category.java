@@ -1,7 +1,6 @@
 package kdkd.youre.backend.domain.category.domain;
 
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryUpdateRequest;
-import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
