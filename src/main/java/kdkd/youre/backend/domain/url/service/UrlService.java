@@ -98,7 +98,8 @@ public class UrlService {
         UrlFindResponse.UrlFindResponseBuilder builder = UrlFindResponse.builder();
 
         if (!isDuplicated) {
-            return builder.isFirst(true)
+            return builder
+                    .isSaved(false)
                     .urlAddress("crawling urlAddress")
                     .thumbnail("crawling thumbnail")
                     .tag(Collections.emptyList())
@@ -113,7 +114,9 @@ public class UrlService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        builder.isFirst(false)
+        builder
+                .urlId(url.getId())
+                .isSaved(true)
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
