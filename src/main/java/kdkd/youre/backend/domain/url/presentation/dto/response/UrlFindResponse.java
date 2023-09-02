@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class UrlFindResponse {
 
-    private Boolean isFirst;
+    private Boolean isSaved;
     private String urlAddress;
     private String name;
     private String thumbnail;
