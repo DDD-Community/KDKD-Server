@@ -10,11 +10,13 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-    @Value("chrome.extension.id")
+    @Value("${chrome.extension.id}")
     private String extensionId;
 
     @Bean
     public CorsFilter corsFilter() {
+
+        System.out.println(extensionId);
 
         CorsConfiguration configuration = new CorsConfiguration();
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
