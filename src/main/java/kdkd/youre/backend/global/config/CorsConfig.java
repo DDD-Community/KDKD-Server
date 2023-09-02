@@ -12,11 +12,11 @@ public class CorsConfig {
 
     @Value("${chrome.extension.id}")
     private String extensionId;
+    @Value("${chrome.extension.id.second}")
+    private String extensionIdSecond;
 
     @Bean
     public CorsFilter corsFilter() {
-
-        System.out.println(extensionId);
 
         CorsConfiguration configuration = new CorsConfiguration();
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -24,6 +24,8 @@ public class CorsConfig {
         configuration.setAllowCredentials(true); // 내 서버가 응답을 할 때 json을 자바스크립트에서 처리할 수 있게 할지를 설정하는 것
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("chrome-extension://" + extensionId);
+        configuration.addAllowedOrigin("chrome-extension://" + extensionIdSecond);
+
         configuration.addAllowedHeader("*"); // 모든 header에 응답을 허용
         configuration.addAllowedMethod("*"); // 모든 post, get, put, delete, patch 요청을 허용
 
