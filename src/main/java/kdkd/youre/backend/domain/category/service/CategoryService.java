@@ -20,26 +20,44 @@ import java.util.Optional;
 @Slf4j
 @Transactional
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
-        //카테고리 중복체크
-        Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
+        checkDuplicateByName(request.getName(), member);
 
         Category parentCategory = Optional.ofNullable(request.getParentId())
                 .map(id -> categoryRepository.findById(id)
                         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY)))
                 .orElse(null);
 
-        if (isDuplicated) {
-            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
-        }
+        String fullName = Optional.ofNullable(parentCategory)
+                .map(parent -> parent.getChildFullName(request.getName()))
+                .orElse(request.getName());
+
+        //TODO: 추후 도메인 로직으로 분리 예정
+        Long position = Optional.ofNullable(parentCategory)
+                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, p))
+                .orElseGet(() -> categoryRepository.findMaxPositionByMember(member));
+
+        Long newPosition = Optional.ofNullable(position)
+                .map(p -> (p / 10000L + 1) * 10000L)
+                .orElse(10000L);
+
+        Long depth = Optional.ofNullable(parentCategory)
+                .map(Category::getDepth)
+                .map(d -> d + 1)
+                .orElse(1L);
 
         Category category = Category.builder()
                 .name(request.getName())
+                .fullName(fullName)
                 .parent(parentCategory)
                 .member(member)
+                .depth(depth)
+                .isBookmarked(false)
+                .position(newPosition)
                 .build();
 
         categoryRepository.save(category);
@@ -67,5 +85,12 @@ public class CategoryService {
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
         if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
+    }
+
+    private void checkDuplicateByName(String name, Member member) {
+
+        if (categoryRepository.existsByNameAndMember(name, member)) {
+            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
+        }
     }
 }

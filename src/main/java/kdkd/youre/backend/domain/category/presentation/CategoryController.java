@@ -1,4 +1,4 @@
-package kdkd.youre.backend.domain.category.presentation.dto;
+package kdkd.youre.backend.domain.category.presentation;
 
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryUpdateRequest;

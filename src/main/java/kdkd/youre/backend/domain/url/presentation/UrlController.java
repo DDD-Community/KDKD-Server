@@ -2,16 +2,21 @@ package kdkd.youre.backend.domain.url.presentation;
 
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
+import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 
+import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.domain.url.service.UrlService;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +60,18 @@ public class UrlController {
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         UrlFindResponse response = urlService.findUrl(address, principalDetails.getMember());
+        return ResponseEntity.ok().body(response);
+    }
+
+    //Url 전체조회
+    @GetMapping("/find")
+    public ResponseEntity<UrlFindAllResponse> findAllUrl(@ModelAttribute UrlFindAllParam params,
+                                                         @RequestParam(defaultValue = "1") int pageNo,
+                                                         @RequestParam(defaultValue = "25") int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        UrlFindAllResponse response = urlService.findAllUrl(params, pageable);
+
         return ResponseEntity.ok().body(response);
     }
 }

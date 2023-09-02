@@ -3,7 +3,7 @@ package kdkd.youre.backend.domain.auth.presentation.dto.request;
 import lombok.*;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class AuthLoginRequest {
 
     private String loginId;
