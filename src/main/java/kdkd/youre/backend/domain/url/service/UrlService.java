@@ -12,7 +12,7 @@ import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlDto;
+import kdkd.youre.backend.domain.url.presentation.dto.UrlDto;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -98,7 +98,8 @@ public class UrlService {
         UrlFindResponse.UrlFindResponseBuilder builder = UrlFindResponse.builder();
 
         if (!isDuplicated) {
-            return builder.isSaved(false)
+            return builder
+                    .isSaved(false)
                     .urlAddress("crawling urlAddress")
                     .thumbnail("crawling thumbnail")
                     .tag(Collections.emptyList())
@@ -113,7 +114,9 @@ public class UrlService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        builder.isSaved(true)
+        builder
+                .urlId(url.getId())
+                .isSaved(true)
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
@@ -126,27 +129,23 @@ public class UrlService {
     }
 
     //전체목록조회
-    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Member member, Pageable pageable) {
+    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Pageable pageable) {
 
-        List<Url> urls = Optional.ofNullable(urlRepository.findByCategory_Member(member))
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
+        List<Url> urls = urlRepository.findBySearchWord(params, pageable);
 
-        List<Url> searchWord = urlRepository.findBySearchWord(params, pageable);
-
-        List<UrlDto> urlDto = searchWord.stream()
+        List<UrlDto> urlDtos = urls.stream()
                 .map(url -> {
                     List<Tag> tags = tagRepository.findByUrl(url);
                     List<String> tagNames = tags.stream()
                             .map(Tag::getName)
                             .collect(Collectors.toList());
-
                     return UrlDto.from(url, tagNames);
                 })
                 .collect(Collectors.toList());
 
         return UrlFindAllResponse.builder()
-                .totalCount(urlDto.size())
-                .url(urlDto)
+                .totalCount(urlDtos.size())
+                .url(urlDtos)
                 .build();
     }
 
