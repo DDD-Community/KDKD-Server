@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.url.presentation.dto.response;
 
+import kdkd.youre.backend.domain.url.presentation.dto.UrlDto;
 import lombok.Builder;
 import lombok.Getter;
 
