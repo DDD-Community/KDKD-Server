@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.url.presentation.dto;
 
+import kdkd.youre.backend.domain.category.presentation.dto.CategoryDto;
 import kdkd.youre.backend.domain.url.domain.Url;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class UrlDto {
     private String urlAddress;
     private String name;
     private String thumbnail;
-    private Long categoryId;
+    private CategoryDto category;
     private List<String> tag;
     private String memo;
 
@@ -24,7 +25,7 @@ public class UrlDto {
                 .urlAddress(url.getUrlAddress())
                 .name(url.getName())
                 .thumbnail(url.getThumbnail())
-                .categoryId(url.getCategory().getId())
+                .category(CategoryDto.from(url.getCategory()))
                 .tag(tagNames)
                 .memo(url.getMemo())
                 .build();

@@ -66,12 +66,11 @@ public class UrlController {
     //Url 전체조회
     @GetMapping("/find")
     public ResponseEntity<UrlFindAllResponse> findAllUrl(@ModelAttribute UrlFindAllParam params,
-                                                         @AuthenticationPrincipal PrincipalDetails principalDetails,
                                                          @RequestParam(defaultValue = "1") int pageNo,
                                                          @RequestParam(defaultValue = "25") int pageSize) {
 
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        UrlFindAllResponse response = urlService.findAllUrl(params, principalDetails.getMember(), pageable);
+        UrlFindAllResponse response = urlService.findAllUrl(params, pageable);
 
         return ResponseEntity.ok().body(response);
     }
