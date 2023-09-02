@@ -24,7 +24,6 @@ public class CategoryService {
 
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
-        //카테고리 중복체크
         checkDuplicateByName(request.getName(), member);
 
         Category parentCategory = Optional.ofNullable(request.getParentId())
@@ -36,11 +35,28 @@ public class CategoryService {
                 .map(parent -> parent.getChildFullName(request.getName()))
                 .orElse(request.getName());
 
+        //TODO: 추후 도메인 로직으로 분리 예정
+        Long position = Optional.ofNullable(parentCategory)
+                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, p))
+                .orElseGet(() -> categoryRepository.findMaxPositionByMember(member));
+
+        Long newPosition = Optional.ofNullable(position)
+                .map(p -> (p / 10000L + 1) * 10000L)
+                .orElse(10000L);
+
+        Long depth = Optional.ofNullable(parentCategory)
+                .map(Category::getDepth)
+                .map(d -> d + 1)
+                .orElse(1L);
+
         Category category = Category.builder()
                 .name(request.getName())
                 .fullName(fullName)
                 .parent(parentCategory)
                 .member(member)
+                .depth(depth)
+                .isBookmarked(false)
+                .position(newPosition)
                 .build();
 
         categoryRepository.save(category);
