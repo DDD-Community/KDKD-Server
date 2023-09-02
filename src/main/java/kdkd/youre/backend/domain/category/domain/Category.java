@@ -47,6 +47,12 @@ public class Category {
     }
 
     public Boolean isPublishedBy(Member member) {
+
         return this.member.equals(member);
+    }
+
+    public String getChildFullName(String childName) {
+
+        return this.fullName + "/" + childName;
     }
 }
