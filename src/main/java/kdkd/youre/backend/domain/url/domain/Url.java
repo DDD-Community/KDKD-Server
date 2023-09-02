@@ -21,15 +21,15 @@ public class Url extends BaseTimeEntity {
     @Column(name = "url_id")
     private Long id;
 
-    private String urlAddress; // url 주소
-    private String name; //url 이름
-    private String thumbnail; // 썸네일 이미지
-    private String memo; // 메모
+    private String urlAddress;      // url 주소
+    private String name;            //url 이름
+    private String thumbnail;       // 썸네일 이미지
+    private String memo;            // 메모
     private Boolean isWatchedLater; // 나중에 보기 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    private Category category; // category id
+    private Category category;
 
     @Builder
     public Url(

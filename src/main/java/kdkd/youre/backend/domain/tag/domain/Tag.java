@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.tag.domain;
 
+import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.url.domain.Url;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class Tag extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

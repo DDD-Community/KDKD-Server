@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.category.domain;
 
+import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
