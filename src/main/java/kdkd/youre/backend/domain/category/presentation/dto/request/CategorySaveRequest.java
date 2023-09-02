@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 public class CategorySaveRequest {
+
     private String name;
     private Long parentId;
 }

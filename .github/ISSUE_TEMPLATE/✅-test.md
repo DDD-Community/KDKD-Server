@@ -1,5 +1,5 @@
 ---
-name: "✅ test"
+name: "✅ Test"
 about: 테스트 이슈 템플릿
 title: "✅ "
 labels: test
