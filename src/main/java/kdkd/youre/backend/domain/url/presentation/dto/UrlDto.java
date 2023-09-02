@@ -1,4 +1,4 @@
-package kdkd.youre.backend.domain.url.presentation.dto.response;
+package kdkd.youre.backend.domain.url.presentation.dto;
 
 import kdkd.youre.backend.domain.url.domain.Url;
 import lombok.Builder;

@@ -12,7 +12,7 @@ import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
-import kdkd.youre.backend.domain.url.presentation.dto.response.UrlDto;
+import kdkd.youre.backend.domain.url.presentation.dto.UrlDto;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
 import kdkd.youre.backend.global.exception.CustomException;
