@@ -37,7 +37,7 @@ public class CategoryService {
 
         //TODO: 추후 도메인 로직으로 분리 예정
         Long position = Optional.ofNullable(parentCategory)
-                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, request.getParentId()))
+                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, p))
                 .orElseGet(() -> categoryRepository.findMaxPositionByMember(member));
 
         Long newPosition = Optional.ofNullable(position)

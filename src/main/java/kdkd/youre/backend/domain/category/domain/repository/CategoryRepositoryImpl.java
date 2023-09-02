@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.category.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -12,22 +13,22 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository{
 
     @Override
     public Long findMaxPositionByMember(Member member) {
-
-            return queryFactory
-                    .select(category.position.max())
-                    .from(category)
-                    .where(category.member.eq(member))
-                    .select(category.position.max())
-                    .fetchOne();
-    }
-
-    @Override
-    public Long findMaxPositionForMemberAndParent(Member member,Long parentId) {
         return queryFactory
                 .select(category.position.max())
                 .from(category)
                 .where(
-                        category.member.eq(member).and(category.parent.id.eq(parentId))
+                        category.member.eq(member).and(category.parent.isNull())
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long findMaxPositionForMemberAndParent(Member member, Category parent) {
+        return queryFactory
+                .select(category.position.max())
+                .from(category)
+                .where(
+                        category.member.eq(member).and(category.parent.eq(parent))
                 )
                 .fetchOne();
     }
