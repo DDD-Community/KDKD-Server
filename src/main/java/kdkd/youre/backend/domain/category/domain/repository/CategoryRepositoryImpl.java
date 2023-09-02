@@ -20,4 +20,15 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository{
                     .select(category.position.max())
                     .fetchOne();
     }
+
+    @Override
+    public Long findMaxPositionForMemberAndParent(Member member,Long parentId) {
+        return queryFactory
+                .select(category.position.max())
+                .from(category)
+                .where(
+                        category.member.eq(member).and(category.parent.id.eq(parentId))
+                )
+                .fetchOne();
+    }
 }

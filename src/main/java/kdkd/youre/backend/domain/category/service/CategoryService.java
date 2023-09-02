@@ -35,15 +35,23 @@ public class CategoryService {
                 .map(parent -> parent.getChildFullName(request.getName()))
                 .orElse(request.getName());
 
-        Long position = categoryRepository.findMaxPositionByMember(member);
+        Long position;
+
+        if (parentCategory != null ){
+             position = categoryRepository.findMaxPositionForMemberAndParent(member, request.getParentId());
+        } else {
+             position = categoryRepository.findMaxPositionByMember(member);
+        }
         Long newPosition = (position == null) ? 10000L : ((position / 10000L) + 1) * 10000L;
+
+        Long depth = (parentCategory != null) ? parentCategory.getDepth() + 1 : 1;
 
         Category category = Category.builder()
                 .name(request.getName())
                 .fullName(fullName)
                 .parent(parentCategory)
                 .member(member)
-                .depth(1L)
+                .depth(depth)
                 .isBookmarked(false)
                 .position(newPosition)
                 .build();
