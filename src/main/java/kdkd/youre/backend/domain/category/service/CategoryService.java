@@ -24,7 +24,6 @@ public class CategoryService {
 
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
-        //카테고리 중복체크
         checkDuplicateByName(request.getName(), member);
 
         Category parentCategory = Optional.ofNullable(request.getParentId())
@@ -35,6 +34,7 @@ public class CategoryService {
         String fullName = Optional.ofNullable(parentCategory)
                 .map(parent -> parent.getChildFullName(request.getName()))
                 .orElse(request.getName());
+
         Long position = categoryRepository.findMaxPositionByMember(member);
         Long newPosition = (position == null) ? 10000L : ((position / 10000L) + 1) * 10000L;
 
