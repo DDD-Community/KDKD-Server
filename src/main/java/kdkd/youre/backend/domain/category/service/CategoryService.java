@@ -23,23 +23,23 @@ public class CategoryService {
 
     public IdResponse saveCategory(CategorySaveRequest request, Member member) {
 
-        //카테고리 중복체크
-        // [TODO] parentId 체크 못함
         Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
 
         if (isDuplicated) {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
 
-//        Category parentCategory = categoryRepository.findById(request.getParentId())
-//                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+        Category parentCategory = Optional.ofNullable(request.getParentId())
+                .map(id -> categoryRepository.findById(id)
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY)))
+                .orElse(null);
 
         Long position = categoryRepository.findMaxPositionByMember(member);
-        Long newPosition = ((position / 10000L) + 1) * 10000L;
+        Long newPosition = (position == null) ? 10000L : ((position / 10000L) + 1) * 10000L;
 
         Category category = Category.builder()
                 .name(request.getName())
-//                .parent(new Category(request.getParentId()))
+                .parent(parentCategory)
                 .member(member)
                 .depth(1L)
                 .isBookmarked(false)
