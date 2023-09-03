@@ -12,6 +12,7 @@ public class CategoryBookmarkFindAllResponse {
     public String name;
 
     public static CategoryBookmarkFindAllResponse from(Category category) {
+        
         return CategoryBookmarkFindAllResponse.builder()
                 .id(category.getId())
                 .name(category.getName())
