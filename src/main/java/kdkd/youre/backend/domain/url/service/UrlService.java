@@ -23,10 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static kdkd.youre.backend.domain.member.domain.QMember.member;
 
 @Service
 @RequiredArgsConstructor
@@ -127,9 +130,9 @@ public class UrlService {
         return builder.build();
     }
 
-    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Pageable pageable) {
+    public UrlFindAllResponse findAllUrl(Member member, UrlFindAllParam params, Pageable pageable) {
 
-        List<Url> urls = urlRepository.findBySearchWord(params, pageable);
+        List<Url> urls = urlRepository.findBySearchWord(member, params, pageable);
 
         List<UrlDto> urlDtos = urls.stream()
                 .map(url -> {

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import static kdkd.youre.backend.domain.category.domain.QCategory.category;
 
 @RequiredArgsConstructor
-public class CategoryRepositoryImpl implements CategoryCustomRepository{
+public class CategoryRepositoryImpl implements CategoryCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
