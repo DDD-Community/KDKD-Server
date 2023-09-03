@@ -2,6 +2,7 @@ package kdkd.youre.backend.domain.category.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
@@ -79,6 +80,15 @@ public class CategoryService {
         checkDuplicateByName(request.getName(), member);
 
         category.updateCategoryName(request);
+    }
+
+    public void updateCategoryBookmark(Long categoryId, CategoryBookmarkUpdateRequest request, Member member) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        validateCategoryOwnerShip(category, member);
+        category.updateCategoryBookmark(request);
     }
 
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기

@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.category.domain;
 
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
@@ -59,6 +60,10 @@ public class Category extends BaseTimeEntity {
 
     public void updateCategoryName(CategoryNameUpdateRequest request) {
         this.name = request.getName();
+    }
+
+    public void updateCategoryBookmark(CategoryBookmarkUpdateRequest request) {
+        this.isBookmarked = request.getBookmark();
     }
 
     public String getChildFullName(String childName) {
