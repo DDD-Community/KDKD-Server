@@ -5,6 +5,7 @@ import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
@@ -121,6 +122,14 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllByMember(member);
         return categories.stream()
                 .map(CategoryFindAllResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<CategoryBookmarkFindAllResponse> findAllCategoryBookmark(Member member) {
+
+        List<Category> categories = categoryRepository.findAllByMemberAndIsBookmarkedTrue(member);
+        return categories.stream()
+                .map(CategoryBookmarkFindAllResponse::from)
                 .collect(Collectors.toList());
     }
 }
