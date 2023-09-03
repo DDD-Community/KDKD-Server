@@ -5,6 +5,7 @@ import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -14,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +114,13 @@ public class CategoryService {
         if (categoryRepository.existsByNameAndMember(name, member)) {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
+    }
+
+    public List<CategoryFindAllResponse> findAllCategory(Member member) {
+
+        List<Category> categories = categoryRepository.findAllByMember(member);
+        return categories.stream()
+                .map(CategoryFindAllResponse::from)
+                .collect(Collectors.toList());
     }
 }
