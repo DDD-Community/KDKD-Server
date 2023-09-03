@@ -66,8 +66,10 @@ public class Category extends BaseTimeEntity {
         this.isBookmarked = request.getBookmark();
     }
 
-    public void updateCategoryPosition(CategoryNameUpdateRequest request) {
-
+    public void updateCategoryPosition(Long newPosition, Long depth, Category parentId) {
+        this.position = newPosition;
+        this.depth = depth;
+        this.parent = parentId;
     }
 
     public String getChildFullName(String childName) {

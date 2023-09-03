@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.category.service;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPositionUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -91,14 +93,43 @@ public class CategoryService {
         category.updateCategoryBookmark(request);
     }
 
-    public void updateCategoryPosition(Long categoryId, CategoryNameUpdateRequest request, Member member) {
+    public void updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
-        category.updateCategoryPosition(request);
+        Long depth = categoryRepository.findDepth(member, request);
+        System.out.println("depth = " + depth);
+        Long currentPosition;
 
+        if(request.getParentId() == null) {
+            currentPosition = categoryRepository.findMaxPositionByMember(member);
+
+            Long newPosition = Optional.ofNullable(currentPosition)
+                    .map(p -> (p / 10000L + 1) * 10000L)
+                    .orElse(10000L);
+
+            // 사이에 들어오면 값 체크 해야함
+
+            System.out.println("currentPosition = " + currentPosition);
+
+            category.updateCategoryPosition(newPosition, depth, null);
+            
+        } else {
+            currentPosition = categoryRepository.findCurrentPosition(member, request);
+
+            List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
+
+            if (!nextPositions.isEmpty()) {
+                Category parentCategory = categoryRepository.findById(request.getParentId())
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+                Long nextPosition = nextPositions.get(0);
+                Long newPosition = (currentPosition + nextPosition) / 2;
+                category.updateCategoryPosition(newPosition, depth, parentCategory);
+            }
+        }
     }
-
 
     public void deleteCategory(Long categoryId, Member member) {
 
@@ -121,6 +152,4 @@ public class CategoryService {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
     }
-
-
 }

@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.category.presentation;
 
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPositionUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.service.CategoryService;
@@ -52,13 +53,12 @@ public class CategoryController {
     //Category Position 수정
     @PatchMapping("{categoryId}/position")
     public ResponseEntity<Void> updateCategoryPosition(@PathVariable Long categoryId,
-                                                       @RequestBody CategoryNameUpdateRequest request,
+                                                       @RequestBody CategoryPositionUpdateRequest request,
                                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         categoryService.updateCategoryPosition(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
     }
-
 
     // Category 삭제
     @DeleteMapping("/{categoryId}")
