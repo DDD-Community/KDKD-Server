@@ -1,7 +1,7 @@
 package kdkd.youre.backend.domain.category.presentation;
 
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
-import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.service.CategoryService;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
@@ -28,11 +28,11 @@ public class CategoryController {
         return ResponseEntity.ok().body(response);
     }
 
-    //Category 수정
+    //Category Name 수정
     @PatchMapping("{categoryId}/name")
     public ResponseEntity<Void> updateCategoryName(@PathVariable Long categoryId,
-                                               @RequestBody CategoryUpdateRequest request,
-                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                                   @RequestBody CategoryNameUpdateRequest request,
+                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         categoryService.updateCategoryName(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();

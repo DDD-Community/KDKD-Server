@@ -3,7 +3,7 @@ package kdkd.youre.backend.domain.category.service;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
-import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -70,7 +70,7 @@ public class CategoryService {
                 .build();
     }
 
-    public void updateCategoryName(Long categoryId, CategoryUpdateRequest request, Member member) {
+    public void updateCategoryName(Long categoryId, CategoryNameUpdateRequest request, Member member) {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
@@ -78,7 +78,7 @@ public class CategoryService {
         validateCategoryOwnerShip(category, member);
         checkDuplicateByName(request.getName(), member);
 
-        category.updateCategory(request);
+        category.updateCategoryName(request);
     }
 
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기

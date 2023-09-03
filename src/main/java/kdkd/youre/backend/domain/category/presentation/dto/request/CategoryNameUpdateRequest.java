@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CategoryUpdateRequest {
+public class CategoryNameUpdateRequest {
     private String name;
 }

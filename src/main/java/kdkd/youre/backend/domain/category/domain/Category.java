@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.category.domain;
 
-import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
+import kdkd.youre.backend.domain.common.domain.BaseTimeEntity;
 import kdkd.youre.backend.domain.member.domain.Member;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +57,7 @@ public class Category {
         return this.member.equals(member);
     }
 
-    public void updateCategory(CategoryUpdateRequest request) {
+    public void updateCategoryName(CategoryNameUpdateRequest request) {
         this.name = request.getName();
     }
 
