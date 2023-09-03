@@ -29,12 +29,21 @@ public class CategoryController {
     }
 
     //Category Name 수정
-    @PatchMapping("{categoryId}/name")
+    @PatchMapping("/{categoryId}/name")
     public ResponseEntity<Void> updateCategoryName(@PathVariable Long categoryId,
                                                    @RequestBody CategoryNameUpdateRequest request,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         categoryService.updateCategoryName(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
+    }
+
+    // Category 삭제
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId,
+                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        categoryService.deleteCategory(categoryId, principalDetails.getMember());
+        return ResponseEntity.noContent().build();
     }
 }
