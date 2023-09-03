@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.category.presentation;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
 import kdkd.youre.backend.domain.category.service.CategoryService;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,5 +59,14 @@ public class CategoryController {
 
         categoryService.deleteCategory(categoryId, principalDetails.getMember());
         return ResponseEntity.noContent().build();
+    }
+
+    // Category 전체 목록 조회
+    @GetMapping("")
+    public ResponseEntity<List<CategoryFindAllResponse>> findAllCategory(
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        List<CategoryFindAllResponse> response = categoryService.findAllCategory(principalDetails.getMember());
+        return ResponseEntity.ok().body(response);
     }
 }

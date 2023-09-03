@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -59,10 +60,12 @@ public class Category extends BaseTimeEntity {
     }
 
     public void updateCategoryName(CategoryNameUpdateRequest request) {
+
         this.name = request.getName();
     }
 
     public void updateCategoryBookmark(CategoryBookmarkUpdateRequest request) {
+
         this.isBookmarked = request.getBookmark();
     }
 
@@ -70,4 +73,17 @@ public class Category extends BaseTimeEntity {
 
         return this.fullName + "/" + childName;
     }
+
+    public Boolean getDroppable() {
+
+        return this.depth < 3;
+    }
+
+    public Long getParentId() {
+
+        return Optional.ofNullable(parent)
+                .map(Category::getId)
+                .orElse(null);
+    }
+
 }
