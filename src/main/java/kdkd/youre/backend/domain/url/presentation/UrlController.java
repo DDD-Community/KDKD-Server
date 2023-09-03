@@ -36,7 +36,7 @@ public class UrlController {
     }
 
     // url 수정
-    @PatchMapping("{urlId}")
+    @PatchMapping("/{urlId}")
     public ResponseEntity<Void> updateUrl(@PathVariable Long urlId,
                                           @RequestBody UrlUpdateRequest request,
                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -46,9 +46,9 @@ public class UrlController {
     }
 
     //Url 삭제
-    @DeleteMapping("{urlId}")
-    public ResponseEntity<?> deleteUrl(@PathVariable Long urlId,
-                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @DeleteMapping("/{urlId}")
+    public ResponseEntity<Void> deleteUrl(@PathVariable Long urlId,
+                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         urlService.deleteUrl(urlId, principalDetails.getMember());
         return ResponseEntity.noContent().build();

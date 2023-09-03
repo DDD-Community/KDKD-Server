@@ -91,7 +91,17 @@ public class CategoryService {
         category.updateCategoryBookmark(request);
     }
 
+    public void deleteCategory(Long categoryId, Member member) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        validateCategoryOwnerShip(category, member);
+        categoryRepository.delete(category);
+    }
+
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
+
         if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }

@@ -30,7 +30,7 @@ public class CategoryController {
     }
 
     //Category Name 수정
-    @PatchMapping("{categoryId}/name")
+    @PatchMapping("/{categoryId}/name")
     public ResponseEntity<Void> updateCategoryName(@PathVariable Long categoryId,
                                                    @RequestBody CategoryNameUpdateRequest request,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -40,12 +40,21 @@ public class CategoryController {
     }
 
     //Category Bookmark 수정
-    @PatchMapping("{categoryId}/bookmark")
+    @PatchMapping("/{categoryId}/bookmark")
     public ResponseEntity<Void> updateCategoryBookmark(@PathVariable Long categoryId,
                                                        @RequestBody CategoryBookmarkUpdateRequest request,
                                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         categoryService.updateCategoryBookmark(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
+    }
+
+    // Category 삭제
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId,
+                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        categoryService.deleteCategory(categoryId, principalDetails.getMember());
+        return ResponseEntity.noContent().build();
     }
 }
