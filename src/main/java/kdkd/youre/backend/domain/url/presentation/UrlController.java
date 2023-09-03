@@ -26,7 +26,7 @@ public class UrlController {
 
     private final UrlService urlService;
 
-    // url 저장
+    // Url 저장
     @PostMapping("")
     public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -35,7 +35,7 @@ public class UrlController {
         return ResponseEntity.ok().body(response);
     }
 
-    // url 수정
+    // Url 수정
     @PatchMapping("/{urlId}")
     public ResponseEntity<Void> updateUrl(@PathVariable Long urlId,
                                           @RequestBody UrlUpdateRequest request,
@@ -45,7 +45,7 @@ public class UrlController {
         return ResponseEntity.ok().build();
     }
 
-    //Url 삭제
+    // Url 삭제
     @DeleteMapping("/{urlId}")
     public ResponseEntity<Void> deleteUrl(@PathVariable Long urlId,
                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -54,7 +54,8 @@ public class UrlController {
         return ResponseEntity.noContent().build();
     }
 
-    //Url 상세조회
+    // TODO: 중복 검사 로직 분리하기
+    // Url 상세조회
     @GetMapping("")
     public ResponseEntity<UrlFindResponse> findUrl(@RequestParam String address,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -63,7 +64,8 @@ public class UrlController {
         return ResponseEntity.ok().body(response);
     }
 
-    //Url 전체조회
+    // TODO: 상세 조회랑 목록 조회 엔드포인트 정리하고, 목록 조회는 검색 api로 기능 분리하기
+    // Url 전체 목록 조회
     @GetMapping("/find")
     public ResponseEntity<UrlFindAllResponse> findAllUrl(@ModelAttribute UrlFindAllParam params,
                                                          @RequestParam(defaultValue = "1") int pageNo,

@@ -8,6 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 public class UrlFindAllParam {
+
     private Long categoryId;
     private String urlKeyword;
     private Boolean isWatched;

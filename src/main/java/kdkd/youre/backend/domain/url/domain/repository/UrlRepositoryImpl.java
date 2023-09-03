@@ -51,7 +51,8 @@ public class UrlRepositoryImpl implements UrlCustomRepository {
                 .join(tag)
                 .on(url.id.eq(tag.url.id))
                 .where(url.name.like("%" + params.getUrlKeyword() + "%")
-                        .or(tag.name.like("%" + params.getUrlKeyword() + "%")));
+                        .or(tag.name.like("%" + params.getUrlKeyword() + "%"))
+                        .or(url.memo.like("%" + params.getUrlKeyword() + "%")));
 
         if (categoryIdExpression != null) {
             query = query.where(categoryIdExpression);
