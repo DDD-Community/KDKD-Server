@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.category.presentation;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
 import kdkd.youre.backend.domain.category.service.CategoryService;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
@@ -67,6 +68,15 @@ public class CategoryController {
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         List<CategoryFindAllResponse> response = categoryService.findAllCategory(principalDetails.getMember());
+        return ResponseEntity.ok().body(response);
+    }
+
+    // Bookmark한 Category 전체 목록 조회
+    @GetMapping("/bookmark")
+    public ResponseEntity<List<CategoryBookmarkFindAllResponse>> findAllCategoryBookmark(
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        List<CategoryBookmarkFindAllResponse> response = categoryService.findAllCategoryBookmark(principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 }

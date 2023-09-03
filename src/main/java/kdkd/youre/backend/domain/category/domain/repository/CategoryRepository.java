@@ -9,4 +9,5 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long>, CategoryCustomRepository{
     Boolean existsByNameAndMember(String name, Member member);
     List<Category> findAllByMember(Member member);
+    List<Category> findAllByMemberAndIsBookmarkedTrue(Member member);
 }
