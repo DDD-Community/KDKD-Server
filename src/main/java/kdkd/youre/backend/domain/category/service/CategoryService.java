@@ -70,18 +70,14 @@ public class CategoryService {
                 .build();
     }
 
-    public void updateCategory(Long categoryId, CategoryUpdateRequest request, Member member) {
+    public void updateCategoryName(Long categoryId, CategoryUpdateRequest request, Member member) {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
         validateCategoryOwnerShip(category, member);
+        checkDuplicateByName(request.getName(), member);
 
-        Boolean isDuplicated = categoryRepository.existsByNameAndMember(request.getName(), member);
-
-        if (isDuplicated) {
-            throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
-        }
         category.updateCategory(request);
     }
 

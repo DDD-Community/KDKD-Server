@@ -30,11 +30,11 @@ public class CategoryController {
 
     //Category 수정
     @PatchMapping("{categoryId}/name")
-    public ResponseEntity<Void> updateCategory(@PathVariable Long categoryId,
+    public ResponseEntity<Void> updateCategoryName(@PathVariable Long categoryId,
                                                @RequestBody CategoryUpdateRequest request,
                                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        categoryService.updateCategory(categoryId, request, principalDetails.getMember());
+        categoryService.updateCategoryName(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
     }
 }
