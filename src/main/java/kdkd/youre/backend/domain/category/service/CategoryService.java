@@ -2,6 +2,7 @@ package kdkd.youre.backend.domain.category.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
@@ -66,10 +67,26 @@ public class CategoryService {
                 .build();
     }
 
+    public void updateBookmarkCategory(Long categoryId, CategoryBookmarkUpdateRequest request, Member member) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        validateCategoryOwnerShip(category, member);
+        category.updateBookmarkCategory(request);
+    }
+
     private void checkDuplicateByName(String name, Member member) {
 
         if (categoryRepository.existsByNameAndMember(name, member)) {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
     }
+
+    public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
+        if (!category.isPublishedBy(member))
+            throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
+    }
+
+
 }
