@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface CategoryCustomRepository {
     Long findMaxPositionByMember(Member member);
+
     Long findMaxPositionForMemberAndParent(Member member, Category parent);
 
     Long findCurrentPosition(Member member, CategoryPositionUpdateRequest request);

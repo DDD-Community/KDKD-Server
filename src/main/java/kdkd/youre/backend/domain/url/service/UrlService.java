@@ -9,12 +9,14 @@ import kdkd.youre.backend.domain.tag.domain.repository.TagRepository;
 import kdkd.youre.backend.domain.tag.service.TagService;
 import kdkd.youre.backend.domain.url.domain.Url;
 import kdkd.youre.backend.domain.url.domain.repository.UrlRepository;
+import kdkd.youre.backend.domain.url.presentation.dto.UrlCrawlingDto;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlFindAllParam;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlSaveRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.request.UrlUpdateRequest;
 import kdkd.youre.backend.domain.url.presentation.dto.UrlDto;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindAllResponse;
 import kdkd.youre.backend.domain.url.presentation.dto.response.UrlFindResponse;
+import kdkd.youre.backend.domain.url.service.helper.JsoupCrawlingHelper;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static kdkd.youre.backend.domain.member.domain.QMember.member;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +43,7 @@ public class UrlService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TagService tagService;
+    private final JsoupCrawlingHelper jsoupCrawlingHelper;
 
     public IdResponse saveUrl(UrlSaveRequest request, Member member) {
 
@@ -97,10 +103,13 @@ public class UrlService {
         UrlFindResponse.UrlFindResponseBuilder builder = UrlFindResponse.builder();
 
         if (!isDuplicated) {
+            UrlCrawlingDto urlCrawlingDto = jsoupCrawlingHelper.getUrlCrawlingInfo(address);
+
             return builder
                     .isSaved(false)
-                    .urlAddress("crawling urlAddress")
-                    .thumbnail("crawling thumbnail")
+                    .urlAddress(urlCrawlingDto.getAddress())
+                    .name(urlCrawlingDto.getName())
+                    .thumbnail(urlCrawlingDto.getThumbnail())
                     .tag(Collections.emptyList())
                     .isWatchedLater(false)
                     .build();
@@ -127,9 +136,9 @@ public class UrlService {
         return builder.build();
     }
 
-    public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Pageable pageable) {
+    public UrlFindAllResponse findAllUrl(Member member, UrlFindAllParam params, Pageable pageable) {
 
-        List<Url> urls = urlRepository.findBySearchWord(params, pageable);
+        List<Url> urls = urlRepository.findBySearchWord(member, params, pageable);
 
         List<UrlDto> urlDtos = urls.stream()
                 .map(url -> {
