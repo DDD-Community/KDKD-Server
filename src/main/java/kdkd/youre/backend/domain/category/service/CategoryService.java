@@ -36,9 +36,12 @@ public class CategoryService {
                 .orElse(request.getName());
 
         //TODO: 추후 도메인 로직으로 분리 예정
-        Long position = Optional.ofNullable(parentCategory)
-                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, p))
-                .orElseGet(() -> categoryRepository.findMaxPositionByMember(member));
+        Long position;
+        if (parentCategory != null) {
+            position = categoryRepository.findMaxPositionForMemberAndParent(member, parentCategory);
+        } else {
+            position = categoryRepository.findMaxPositionByMember(member);
+        }
 
         Long newPosition = Optional.ofNullable(position)
                 .map(p -> (p / 10000L + 1) * 10000L)
