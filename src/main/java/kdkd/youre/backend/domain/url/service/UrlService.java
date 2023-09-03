@@ -87,7 +87,7 @@ public class UrlService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_URL));
 
         validateUrlOwnerShip(url, member);
-        this.urlRepository.deleteById(urlId);
+        urlRepository.delete(url);
     }
 
     // url 상세 조회
@@ -150,6 +150,7 @@ public class UrlService {
     }
 
     public void validateUrlOwnerShip(Url url, Member member) {
+
         if (!url.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
