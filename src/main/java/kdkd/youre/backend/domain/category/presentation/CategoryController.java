@@ -1,5 +1,6 @@
 package kdkd.youre.backend.domain.category.presentation;
 
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.service.CategoryService;
@@ -38,13 +39,13 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
-    //Category Bookmarked 수정
+    //Category Bookmark 수정
     @PatchMapping("{categoryId}/bookmark")
-    public ResponseEntity<Void> updateBookmarkCategory(@PathVariable Long categoryId,
+    public ResponseEntity<Void> updateCategoryBookmark(@PathVariable Long categoryId,
                                                        @RequestBody CategoryBookmarkUpdateRequest request,
                                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        categoryService.updateBookmarkCategory(categoryId, request, principalDetails.getMember());
+        categoryService.updateCategoryBookmark(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
     }
 }
