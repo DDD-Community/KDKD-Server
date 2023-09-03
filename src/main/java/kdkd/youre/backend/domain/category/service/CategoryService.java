@@ -2,8 +2,8 @@ package kdkd.youre.backend.domain.category.service;
 
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
-import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.global.exception.CustomException;
@@ -37,9 +37,12 @@ public class CategoryService {
                 .orElse(request.getName());
 
         //TODO: 추후 도메인 로직으로 분리 예정
-        Long position = Optional.ofNullable(parentCategory)
-                .map(p -> categoryRepository.findMaxPositionForMemberAndParent(member, p))
-                .orElseGet(() -> categoryRepository.findMaxPositionByMember(member));
+        Long position;
+        if (parentCategory != null) {
+            position = categoryRepository.findMaxPositionForMemberAndParent(member, parentCategory);
+        } else {
+            position = categoryRepository.findMaxPositionByMember(member);
+        }
 
         Long newPosition = Optional.ofNullable(position)
                 .map(p -> (p / 10000L + 1) * 10000L)
@@ -74,6 +77,22 @@ public class CategoryService {
 
         validateCategoryOwnerShip(category, member);
         category.updateBookmarkCategory(request);
+    }
+
+    public void updateCategoryName(Long categoryId, CategoryNameUpdateRequest request, Member member) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        validateCategoryOwnerShip(category, member);
+        checkDuplicateByName(request.getName(), member);
+
+        category.updateCategoryName(request);
+    }
+
+    public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
+        if (!category.isPublishedBy(member))
+            throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
     }
 
     private void checkDuplicateByName(String name, Member member) {
