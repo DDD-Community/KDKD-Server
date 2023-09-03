@@ -59,4 +59,13 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
+
+    // Category 삭제
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId,
+                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        categoryService.deleteCategory(categoryId, principalDetails.getMember());
+        return ResponseEntity.noContent().build();
+    }
 }

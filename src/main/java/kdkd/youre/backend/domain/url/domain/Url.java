@@ -51,6 +51,7 @@ public class Url extends BaseTimeEntity {
     }
 
     public Boolean isPublishedBy(Member member) {
+
         return this.getCategory().isPublishedBy(member);
     }
 
