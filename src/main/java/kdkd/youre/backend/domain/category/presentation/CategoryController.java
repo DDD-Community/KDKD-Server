@@ -37,4 +37,15 @@ public class CategoryController {
         categoryService.updateCategoryName(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
     }
+
+    //Category Position 수정
+    @PatchMapping("{categoryId}/position")
+    public ResponseEntity<Void> updateCategoryPosition(@PathVariable Long categoryId,
+                                                       @RequestBody CategoryNameUpdateRequest request,
+                                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        categoryService.updateCategoryPosition(categoryId, request, principalDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
+
 }

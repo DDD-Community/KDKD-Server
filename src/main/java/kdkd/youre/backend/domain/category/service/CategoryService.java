@@ -81,6 +81,15 @@ public class CategoryService {
         category.updateCategoryName(request);
     }
 
+    public void updateCategoryPosition(Long categoryId, CategoryNameUpdateRequest request, Member member) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        category.updateCategoryPosition(request);
+
+    }
+
+
     public void validateCategoryOwnerShip(Category category, Member member) { // TODO: 위치 혹은 이름 더 적절하게 변경하기
         if (!category.isPublishedBy(member))
             throw new CustomException(ErrorCode.FORBIDDEN_MEMBER);
@@ -92,4 +101,6 @@ public class CategoryService {
             throw new CustomException(ErrorCode.CONFLICT_CATEGORY);
         }
     }
+
+
 }

@@ -61,8 +61,14 @@ public class Category extends BaseTimeEntity {
         this.name = request.getName();
     }
 
+    public void updateCategoryPosition(CategoryNameUpdateRequest request) {
+
+    }
+
     public String getChildFullName(String childName) {
 
         return this.fullName + "/" + childName;
     }
+
+
 }
