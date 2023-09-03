@@ -90,7 +90,6 @@ public class UrlService {
         urlRepository.delete(url);
     }
 
-    // url 상세 조회
     public UrlFindResponse findUrl(String address, Member member) {
 
         boolean isDuplicated = urlRepository.existsByUrlAddressAndCategory_Member(address, member);
@@ -128,7 +127,6 @@ public class UrlService {
         return builder.build();
     }
 
-    //전체목록조회
     public UrlFindAllResponse findAllUrl(UrlFindAllParam params, Pageable pageable) {
 
         List<Url> urls = urlRepository.findBySearchWord(params, pageable);
