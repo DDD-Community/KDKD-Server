@@ -1,4 +1,4 @@
-package kdkd.youre.backend.domain.auth.presentation.dto.request;
+package kdkd.youre.backend.domain.auth.presentation.dto.response;
 
 import lombok.*;
 
