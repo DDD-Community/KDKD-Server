@@ -1,6 +1,7 @@
 package kdkd.youre.backend.domain.category.presentation;
 
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPositionUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
@@ -34,7 +35,7 @@ public class CategoryController {
     }
 
     //Category Name 수정
-    @PatchMapping("/{categoryId}/name")
+    @PatchMapping("{categoryId}/name")
     public ResponseEntity<Void> updateCategoryName(@PathVariable Long categoryId,
                                                    @RequestBody CategoryNameUpdateRequest request,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -44,12 +45,22 @@ public class CategoryController {
     }
 
     //Category Bookmark 수정
-    @PatchMapping("/{categoryId}/bookmark")
+    @PatchMapping("{categoryId}/bookmark")
     public ResponseEntity<Void> updateCategoryBookmark(@PathVariable Long categoryId,
                                                        @RequestBody CategoryBookmarkUpdateRequest request,
                                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         categoryService.updateCategoryBookmark(categoryId, request, principalDetails.getMember());
+        return ResponseEntity.ok().build();
+    }
+
+    //Category Position 수정
+    @PatchMapping("{categoryId}/position")
+    public ResponseEntity<Void> updateCategoryPosition(@PathVariable Long categoryId,
+                                                       @RequestBody CategoryPositionUpdateRequest request,
+                                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        categoryService.updateCategoryPosition(categoryId, request, principalDetails.getMember());
         return ResponseEntity.ok().build();
     }
 

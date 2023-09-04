@@ -3,6 +3,7 @@ package kdkd.youre.backend.domain.category.service;
 import kdkd.youre.backend.domain.category.domain.Category;
 import kdkd.youre.backend.domain.category.domain.repository.CategoryRepository;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryBookmarkUpdateRequest;
+import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPositionUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
@@ -13,6 +14,7 @@ import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,6 +95,68 @@ public class CategoryService {
 
         validateCategoryOwnerShip(category, member);
         category.updateCategoryBookmark(request);
+    }
+
+    public void updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
+
+        // TODO: 로직정리 필요
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
+        Category parentCategory = Optional.ofNullable(request.getParentId())
+                .map(id -> categoryRepository.findById(id)
+                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY)))
+                .orElse(null);
+
+        String fullName = Optional.ofNullable(parentCategory)
+                .map(parent -> parent.getChildFullName(category.getName()))
+                .orElse(category.getName());
+
+        // 깊이 계산
+        Long depth = categoryRepository.findDepth(member, request);
+
+        Long nextPosition;
+        Long newPosition = null;
+        Long currentPosition;
+
+        if (request.getParentId() == null) {
+            if (request.getAboveTargetId() == null) {
+                Long nextPositions = categoryRepository.findMinPosition(member, request);
+                category.updateCategoryPosition(nextPositions / 2, depth, null, fullName);
+            } else {
+                currentPosition = categoryRepository.findCurrentPosition(member, request);
+                List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
+
+                if (nextPositions.isEmpty()) {
+                    newPosition = ((currentPosition / 10000L) + 1) * 10000L;
+                } else {
+                    nextPosition = nextPositions.get(0);
+                    newPosition = (currentPosition + nextPosition) / 2;
+                }
+
+                category.updateCategoryPosition(newPosition, depth, null, fullName);
+            }
+        } else {
+            if (request.getAboveTargetId() == null) {
+                Long nextPositions = categoryRepository.findMinParentPosition(member, request);
+                if (nextPositions == null) {
+                    category.updateCategoryPosition(10000L, depth + 1, parentCategory, fullName);
+                } else {
+                    category.updateCategoryPosition(nextPositions / 2, depth + 1, parentCategory, fullName);
+                }
+            } else {
+                currentPosition = categoryRepository.findCurrentPosition(member, request);
+                List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
+
+                if (nextPositions.isEmpty()) {
+                    newPosition = ((currentPosition / 10000L) + 1) * 10000L;
+                } else {
+                    nextPosition = nextPositions.get(0);
+                    newPosition = (currentPosition + nextPosition) / 2;
+                }
+                category.updateCategoryPosition(newPosition, depth, parentCategory, fullName);
+            }
+        }
     }
 
     public void deleteCategory(Long categoryId, Member member) {
