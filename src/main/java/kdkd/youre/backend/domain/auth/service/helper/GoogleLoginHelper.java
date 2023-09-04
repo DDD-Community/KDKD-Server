@@ -4,28 +4,22 @@ import kdkd.youre.backend.domain.auth.presentation.dto.GoogleAuthDto;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@RequiredArgsConstructor
 public class GoogleLoginHelper {
-
-    private final RestTemplate restTemplate;
 
     public Member getUserData(String idToken) {
         try {
+            RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<GoogleAuthDto> response = restTemplate.getForEntity(
                     "https://oauth2.googleapis.com/tokeninfo?id_token={idToken}",
                     GoogleAuthDto.class,
                     idToken
             );
-
-            if (response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError()) {
-                throw new CustomException(ErrorCode.UNAUTHORIZED_TOKEN);
-            }
 
             GoogleAuthDto googleAuthDto = response.getBody();
 
@@ -37,6 +31,8 @@ public class GoogleLoginHelper {
                     .password("") // TODO: null도 괜찮다면 제거하기
                     .role("ROLE_USER") // TODO: 추후 ENUM으로 관리하기
                     .build();
+        } catch (HttpClientErrorException e) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_TOKEN);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
