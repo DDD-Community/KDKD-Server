@@ -16,4 +16,8 @@ public interface CategoryCustomRepository {
     List<Long> findNextPosition(Member member, CategoryPositionUpdateRequest request, Long current);
 
     Long findDepth(Member member, CategoryPositionUpdateRequest request);
+
+    Long findMinPosition(Member member, CategoryPositionUpdateRequest request);
+
+    Long findMinParentPosition(Member member, CategoryPositionUpdateRequest request);
 }

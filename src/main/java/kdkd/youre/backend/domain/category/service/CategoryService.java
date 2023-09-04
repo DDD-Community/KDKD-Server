@@ -14,6 +14,7 @@ import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,9 +99,7 @@ public class CategoryService {
 
     public void updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
 
-        // TODO: null null 일때 로직 추가 해야함
-        Long currentPosition;
-
+        // TODO: 로직정리 필요
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
 
@@ -118,27 +117,12 @@ public class CategoryService {
 
         Long nextPosition;
         Long newPosition = null;
+        Long currentPosition;
 
         if (request.getParentId() == null) {
-
-            currentPosition = categoryRepository.findCurrentPosition(member, request);
-            List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
-
-            if (nextPositions.isEmpty()) {
-                newPosition = ((currentPosition / 10000L) + 1) * 10000L;
-            } else {
-                nextPosition = nextPositions.get(0);
-                newPosition = (currentPosition + nextPosition) / 2;
-            }
-
-            category.updateCategoryPosition(newPosition, depth, null, fullName);
-
-        } else {
-            Category parentCategory2 = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
-
             if (request.getAboveTargetId() == null) {
-                category.updateCategoryPosition(10000L, depth + 1, parentCategory2, fullName);
+                Long nextPositions = categoryRepository.findMinPosition(member, request);
+                category.updateCategoryPosition(nextPositions / 2, depth, null, fullName);
             } else {
                 currentPosition = categoryRepository.findCurrentPosition(member, request);
                 List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
@@ -149,7 +133,28 @@ public class CategoryService {
                     nextPosition = nextPositions.get(0);
                     newPosition = (currentPosition + nextPosition) / 2;
                 }
-                category.updateCategoryPosition(newPosition, depth, parentCategory2, fullName);
+
+                category.updateCategoryPosition(newPosition, depth, null, fullName);
+            }
+        } else {
+            if (request.getAboveTargetId() == null) {
+                Long nextPositions = categoryRepository.findMinParentPosition(member, request);
+                if (nextPositions == null) {
+                    category.updateCategoryPosition(10000L, depth + 1, parentCategory, fullName);
+                } else {
+                    category.updateCategoryPosition(nextPositions / 2, depth + 1, parentCategory, fullName);
+                }
+            } else {
+                currentPosition = categoryRepository.findCurrentPosition(member, request);
+                List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
+
+                if (nextPositions.isEmpty()) {
+                    newPosition = ((currentPosition / 10000L) + 1) * 10000L;
+                } else {
+                    nextPosition = nextPositions.get(0);
+                    newPosition = (currentPosition + nextPosition) / 2;
+                }
+                category.updateCategoryPosition(newPosition, depth, parentCategory, fullName);
             }
         }
     }

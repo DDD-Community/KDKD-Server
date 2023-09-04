@@ -98,4 +98,27 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository {
                         .and(category.member.eq(member)))
                 .fetchOne();
     }
+
+    @Override
+    public Long findMinPosition(Member member, CategoryPositionUpdateRequest request) {
+
+        return queryFactory
+                .select(category.position.min())
+                .from(category)
+                .where(
+                        category.member.eq(member).and(category.depth.eq(1L))
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long findMinParentPosition(Member member, CategoryPositionUpdateRequest request) {
+        return queryFactory
+                .select(category.position.min())
+                .from(category)
+                .where(
+                        category.member.eq(member).and(category.parent.id.eq(request.getParentId()))
+                )
+                .fetchOne();
+    }
 }
