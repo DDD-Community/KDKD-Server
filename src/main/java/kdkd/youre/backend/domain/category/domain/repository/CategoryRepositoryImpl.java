@@ -38,6 +38,15 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository {
 
     @Override
     public Long findCurrentPosition(Member member, CategoryPositionUpdateRequest request) {
+
+        if (request.getParentId() == null) {
+            return queryFactory.select(category.position)
+                    .from(category)
+                    .where(category.id.eq(request.getAboveTargetId())
+                            .and(category.parent.isNull())
+                            .and(category.member.eq(member)))
+                    .fetchOne();
+        }
         return queryFactory.select(category.position)
                 .from(category)
                 .where(category.id.eq(request.getAboveTargetId())
@@ -48,6 +57,16 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository {
 
     @Override
     public List<Long> findNextPosition(Member member, CategoryPositionUpdateRequest request, Long current) {
+        if (request.getParentId() == null) {
+            return queryFactory.select(category.position)
+                    .from(category)
+                    .where(category.parent.isNull()
+                            .and(category.position.gt(current))
+                            .and(category.member.eq(member)))
+                    .orderBy(category.position.asc())
+                    .fetch();
+
+        }
         return queryFactory.select(category.position)
                 .from(category)
                 .where(category.parent.id.eq(request.getParentId())
@@ -60,8 +79,16 @@ public class CategoryRepositoryImpl implements CategoryCustomRepository {
     @Override
     public Long findDepth(Member member, CategoryPositionUpdateRequest request) {
 
-        if(request.getParentId() == null){
+        if (request.getParentId() == null) {
             return 1L;
+        }
+
+        if (request.getAboveTargetId() == null) {
+            return queryFactory.select(category.depth)
+                    .from(category)
+                    .where(category.id.eq(request.getParentId())
+                            .and(category.member.eq(member)))
+                    .fetchOne();
         }
 
         return queryFactory.select(category.depth)
