@@ -1,13 +1,13 @@
 package kdkd.youre.backend.domain.auth.presentation;
 
+import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthGoogleLoginRequest;
 import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthJoinRequest;
 import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginRequest;
-import kdkd.youre.backend.domain.auth.presentation.dto.request.AuthLoginResponse;
+import kdkd.youre.backend.domain.auth.presentation.dto.response.AuthLoginResponse;
 import kdkd.youre.backend.domain.auth.service.AuthService;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,20 +23,29 @@ public class AuthController {
     private final AuthService authService;
 
     // 일반 회원가입 (테스트용)
-    @PostMapping("join")
+    @PostMapping("/join")
     public ResponseEntity<IdResponse> join(@RequestBody AuthJoinRequest request) {
 
         IdResponse response = authService.join(request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     // 일반 로그인 (테스트용)
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<AuthLoginResponse> login(@RequestBody AuthLoginRequest request) {
 
         AuthLoginResponse response = authService.login(request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 구글 로그인
+    @PostMapping("/google")
+    public ResponseEntity<AuthLoginResponse> googleLogin(@RequestBody AuthGoogleLoginRequest request) {
+
+        AuthLoginResponse response = authService.googleLogin(request);
+
+        return ResponseEntity.ok().body(response);
     }
 }

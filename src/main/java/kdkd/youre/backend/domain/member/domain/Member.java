@@ -21,7 +21,7 @@ public class Member extends BaseTimeEntity {
     private String email; // 회원 이메일
 
     // 소셜 로그인 정보
-    private String oauthProvider; // oAuth Provider (google)
+    private String oauthProvider; // oAuth Provider (GOOGLE)
     private String loginId; // 로컬 로그인용. username 역할
     private String password; // 로컬 로그인용
     private String role;
