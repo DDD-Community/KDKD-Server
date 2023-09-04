@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +30,7 @@ public class UrlController {
     public ResponseEntity<IdResponse> saveUrl(@RequestBody UrlSaveRequest request,
                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        IdResponse response = urlService.saveUrl(request, principalDetails.getMember()); // TODO: Membmer가 연관관계 필드를 갖게 되면 member 새로 찾아오는 로직 추가 필요함
+        IdResponse response = urlService.saveUrl(request, principalDetails.getMember()); // TODO: Member가 연관관계 필드를 갖게 되면 member 새로 찾아오는 로직 추가 필요함
         return ResponseEntity.ok().body(response);
     }
 
