@@ -89,7 +89,7 @@ public class Category extends BaseTimeEntity {
 
         return Optional.ofNullable(parent)
                 .map(Category::getId)
-                .orElse(null);
+                .orElse(0L);
     }
 
 }
