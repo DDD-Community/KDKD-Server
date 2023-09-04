@@ -98,13 +98,11 @@ public class CategoryService {
 
     public void updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
 
+        // TODO: null null 일때 로직 추가 해야함
         Long currentPosition;
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
-
-        // 깊이 계산
-        Long depth = categoryRepository.findDepth(member, request);
 
         Category parentCategory = Optional.ofNullable(request.getParentId())
                 .map(id -> categoryRepository.findById(id)
@@ -115,13 +113,16 @@ public class CategoryService {
                 .map(parent -> parent.getChildFullName(category.getName()))
                 .orElse(category.getName());
 
+        // 깊이 계산
+        Long depth = categoryRepository.findDepth(member, request);
+
+        Long nextPosition;
+        Long newPosition = null;
+
         if (request.getParentId() == null) {
 
             currentPosition = categoryRepository.findCurrentPosition(member, request);
-
             List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
-            Long nextPosition;
-            Long newPosition;
 
             if (nextPositions.isEmpty()) {
                 newPosition = ((currentPosition / 10000L) + 1) * 10000L;
@@ -129,33 +130,26 @@ public class CategoryService {
                 nextPosition = nextPositions.get(0);
                 newPosition = (currentPosition + nextPosition) / 2;
             }
+
             category.updateCategoryPosition(newPosition, depth, null, fullName);
+
         } else {
+            Category parentCategory2 = categoryRepository.findById(request.getParentId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
+
             if (request.getAboveTargetId() == null) {
-                Category parentCategory2 = categoryRepository.findById(request.getParentId())
-                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
                 category.updateCategoryPosition(10000L, depth + 1, parentCategory2, fullName);
             } else {
                 currentPosition = categoryRepository.findCurrentPosition(member, request);
-
                 List<Long> nextPositions = categoryRepository.findNextPosition(member, request, currentPosition);
 
-                if (!nextPositions.isEmpty()) {
-                    Category parentCategory2 = categoryRepository.findById(request.getParentId())
-                            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
-
-                    Long nextPosition = nextPositions.get(0);
-                    Long newPosition = (currentPosition + nextPosition) / 2;
-                    category.updateCategoryPosition(newPosition, depth, parentCategory2, fullName);
-                }
                 if (nextPositions.isEmpty()) {
-                    Category parentCategory2 = categoryRepository.findById(request.getParentId())
-                            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
-
-                    Long newPosition = ((currentPosition / 10000L) + 1) * 10000L;
-
-                    category.updateCategoryPosition(newPosition, depth, parentCategory2, fullName);
+                    newPosition = ((currentPosition / 10000L) + 1) * 10000L;
+                } else {
+                    nextPosition = nextPositions.get(0);
+                    newPosition = (currentPosition + nextPosition) / 2;
                 }
+                category.updateCategoryPosition(newPosition, depth, parentCategory2, fullName);
             }
         }
     }
