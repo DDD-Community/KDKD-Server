@@ -7,14 +7,13 @@ import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPosit
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
-import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryTreeResponse;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.global.exception.CustomException;
 import kdkd.youre.backend.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public IdResponse saveCategory(CategorySaveRequest request, Member member) {
+    public CategoryTreeResponse saveCategory(CategorySaveRequest request, Member member) {
 
         checkDuplicateByName(request.getName(), member);
 
@@ -72,9 +71,7 @@ public class CategoryService {
 
         categoryRepository.save(category);
 
-        return IdResponse.builder()
-                .id(category.getId())
-                .build();
+        return CategoryTreeResponse.from(category);
     }
 
     public void updateCategoryName(Long categoryId, CategoryNameUpdateRequest request, Member member) {
@@ -97,7 +94,7 @@ public class CategoryService {
         category.updateCategoryBookmark(request);
     }
 
-    public void updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
+    public CategoryTreeResponse updateCategoryPosition(Long categoryId, CategoryPositionUpdateRequest request, Member member) {
 
         // TODO: 로직정리 필요
         Category category = categoryRepository.findById(categoryId)
@@ -157,6 +154,7 @@ public class CategoryService {
                 category.updateCategoryPosition(newPosition, depth, parentCategory, fullName);
             }
         }
+        return CategoryTreeResponse.from(category);
     }
 
     public void deleteCategory(Long categoryId, Member member) {
@@ -181,11 +179,11 @@ public class CategoryService {
         }
     }
 
-    public List<CategoryFindAllResponse> findAllCategory(Member member) {
+    public List<CategoryTreeResponse> findAllCategory(Member member) {
 
         List<Category> categories = categoryRepository.findAllByMember(member);
         return categories.stream()
-                .map(CategoryFindAllResponse::from)
+                .map(CategoryTreeResponse::from)
                 .collect(Collectors.toList());
     }
 
