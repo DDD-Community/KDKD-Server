@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CategoryFindAllResponse {
+public class CategoryTreeResponse {
 
     // https://www.npmjs.com/package/@minoru/react-dnd-treeview 형식 맞춤
     private Long id;            // 카테고리 id
@@ -15,9 +15,9 @@ public class CategoryFindAllResponse {
     private String text;        // 카테고리 이름
     private DataDto data;       // 기타 정보(순서)
 
-    public static CategoryFindAllResponse from(Category category) {
+    public static CategoryTreeResponse from(Category category) {
 
-        return CategoryFindAllResponse.builder()
+        return CategoryTreeResponse.builder()
                 .id(category.getId())
                 .parent(category.getParentId())
                 .droppable(category.getDroppable())

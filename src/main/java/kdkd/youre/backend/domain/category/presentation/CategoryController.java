@@ -5,7 +5,7 @@ import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryPosit
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategorySaveRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.request.CategoryNameUpdateRequest;
 import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryBookmarkFindAllResponse;
-import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryFindAllResponse;
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryTreeResponse;
 import kdkd.youre.backend.domain.category.service.CategoryService;
 import kdkd.youre.backend.domain.common.presentation.dto.response.IdResponse;
 import kdkd.youre.backend.global.security.auth.PrincipalDetails;
@@ -27,10 +27,10 @@ public class CategoryController {
 
     //Category 저장
     @PostMapping("")
-    public ResponseEntity<IdResponse> saveCategory(@RequestBody CategorySaveRequest request,
+    public ResponseEntity<CategoryTreeResponse> saveCategory(@RequestBody CategorySaveRequest request,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        IdResponse response = categoryService.saveCategory(request, principalDetails.getMember());
+        CategoryTreeResponse response = categoryService.saveCategory(request, principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 
@@ -56,12 +56,12 @@ public class CategoryController {
 
     //Category Position 수정
     @PatchMapping("{categoryId}/position")
-    public ResponseEntity<Void> updateCategoryPosition(@PathVariable Long categoryId,
-                                                       @RequestBody CategoryPositionUpdateRequest request,
-                                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<CategoryTreeResponse> updateCategoryPosition(@PathVariable Long categoryId,
+                                                                                 @RequestBody CategoryPositionUpdateRequest request,
+                                                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        categoryService.updateCategoryPosition(categoryId, request, principalDetails.getMember());
-        return ResponseEntity.ok().build();
+        CategoryTreeResponse response = categoryService.updateCategoryPosition(categoryId, request, principalDetails.getMember());
+        return ResponseEntity.ok().body(response);
     }
 
     // Category 삭제
@@ -75,10 +75,10 @@ public class CategoryController {
 
     // Category 전체 목록 조회
     @GetMapping("")
-    public ResponseEntity<List<CategoryFindAllResponse>> findAllCategory(
+    public ResponseEntity<List<CategoryTreeResponse>> findAllCategory(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        List<CategoryFindAllResponse> response = categoryService.findAllCategory(principalDetails.getMember());
+        List<CategoryTreeResponse> response = categoryService.findAllCategory(principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 
