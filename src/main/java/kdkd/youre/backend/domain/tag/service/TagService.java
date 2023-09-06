@@ -1,8 +1,10 @@
 package kdkd.youre.backend.domain.tag.service;
 
+import kdkd.youre.backend.domain.category.presentation.dto.response.CategoryTreeResponse;
 import kdkd.youre.backend.domain.member.domain.Member;
 import kdkd.youre.backend.domain.tag.domain.Tag;
 import kdkd.youre.backend.domain.tag.domain.repository.TagRepository;
+import kdkd.youre.backend.domain.tag.presentation.dto.response.TagFindAllResponse;
 import kdkd.youre.backend.domain.url.domain.Url;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +43,14 @@ public class TagService {
 
         List<Tag> tags = tagRepository.findByUrl(url);
         tagRepository.deleteAll(tags);
+    }
+
+
+    public List<TagFindAllResponse> findAllTags(Member member) {
+        List<String> tags = tagRepository.findDistinctNameByMember(member);
+
+        return tags.stream()
+                .map(TagFindAllResponse::from)
+                .collect(Collectors.toList());
     }
 }
