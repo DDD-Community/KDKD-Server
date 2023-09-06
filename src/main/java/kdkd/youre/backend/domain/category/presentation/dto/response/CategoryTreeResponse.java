@@ -22,7 +22,7 @@ public class CategoryTreeResponse {
                 .parent(category.getParentId())
                 .droppable(category.getDroppable())
                 .text(category.getName())
-                .data(DataDto.from(category.getPosition()))
+                .data(DataDto.from(category))
                 .build();
     }
 
@@ -30,12 +30,14 @@ public class CategoryTreeResponse {
     @Builder
     private static class DataDto {
 
-        private Long order;     // 카테고리 순서
+        private Long order;             // 카테고리 순서
+        private Boolean isBookmarked;   // 즐겨찾기 여부
 
-        private static DataDto from(Long order) {
+        private static DataDto from(Category category) {
 
             return DataDto.builder()
-                    .order(order)
+                    .order(category.getPosition())
+                    .isBookmarked(category.getIsBookmarked())
                     .build();
         }
     }
