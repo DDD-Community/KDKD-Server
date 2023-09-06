@@ -46,7 +46,7 @@ public class TagService {
     }
 
 
-    public List<TagFindAllResponse> findAllTags(Member member) {
+    public List<TagFindAllResponse> findAllTag(Member member) {
         List<String> tags = tagRepository.findDistinctNameByMember(member);
 
         return tags.stream()

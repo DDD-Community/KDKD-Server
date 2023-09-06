@@ -18,11 +18,12 @@ import java.util.List;
 public class TagController {
     private final TagService tagService;
 
+    // Tag 전체목록 조회
     @GetMapping("")
-    public ResponseEntity<List<TagFindAllResponse>> findAllCategory(
+    public ResponseEntity<List<TagFindAllResponse>> findAllTag(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        List<TagFindAllResponse> response = tagService.findAllTags(principalDetails.getMember());
+        List<TagFindAllResponse> response = tagService.findAllTag(principalDetails.getMember());
         return ResponseEntity.ok().body(response);
     }
 }
