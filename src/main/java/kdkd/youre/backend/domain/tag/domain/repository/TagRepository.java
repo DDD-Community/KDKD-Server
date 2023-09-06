@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
+public interface TagRepository extends JpaRepository<Tag, Long>, TagCustomRepository {
     List<Tag> findByMemberAndUrl(Member member, Url url);
+
     List<Tag> findByUrl(Url url);
 }
