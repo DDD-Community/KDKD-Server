@@ -11,6 +11,7 @@ public class UrlFindAllParam {
 
     private Long categoryId;
     private String urlKeyword;
+    private String keywordRange;
     private Boolean isWatched;
     private String order;
 }
