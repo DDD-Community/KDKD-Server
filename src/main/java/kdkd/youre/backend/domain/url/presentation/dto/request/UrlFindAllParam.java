@@ -10,6 +10,7 @@ import lombok.Setter;
 public class UrlFindAllParam {
 
     private Long categoryId;
+    private Long tagId;
     private String urlKeyword;
     private Boolean isWatched;
     private String order;
