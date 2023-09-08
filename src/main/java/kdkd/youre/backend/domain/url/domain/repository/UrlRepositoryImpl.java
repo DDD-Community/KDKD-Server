@@ -24,31 +24,39 @@ public class UrlRepositoryImpl implements UrlCustomRepository {
 	private final JPAQueryFactory queryFactory;
 
 	private BooleanExpression urlKeywordExpression(String urlKeyword, String keywordRange) {  // TODO: 추후 keywordRange를 String 배열로 교체
-        if(keywordRange.equals("name")) { // TODO: 추후 enum으로 교체
-            return urlNameExpression(urlKeyword);
-        }
-        if(keywordRange.equals("memo")) {
-            return urlMemoExpression(urlKeyword);
-        }
-		if(keywordRange.equals("tag")) {
-            return tagNameExpression(urlKeyword);
-        }
-        return urlNameExpression(urlKeyword)
-            .or(urlMemoExpression(urlKeyword))
-            .or(tagNameExpression(urlKeyword));
+		if (urlKeyword == null) {
+			return null;
+		}
+		if (keywordRange == null) {
+			return urlNameExpression(urlKeyword)
+				.or(urlMemoExpression(urlKeyword))
+				.or(tagNameExpression(urlKeyword));
+		}
+		if (keywordRange.equals("name")) { // TODO: 추후 enum으로 교체
+			return urlNameExpression(urlKeyword);
+		}
+		if (keywordRange.equals("memo")) {
+			return urlMemoExpression(urlKeyword);
+		}
+		if (keywordRange.equals("tag")) {
+			return tagNameExpression(urlKeyword);
+		}
+		return urlNameExpression(urlKeyword)
+			.or(urlMemoExpression(urlKeyword))
+			.or(tagNameExpression(urlKeyword)); // TODO: 깔끔하게 수정 필요...
 	}
 
-    private BooleanExpression urlNameExpression(String urlName) {
-        return url.name.like("%" + urlName + "%");
-    }
+	private BooleanExpression urlNameExpression(String urlName) {
+		return url.name.like("%" + urlName + "%");
+	}
 
-    private BooleanExpression urlMemoExpression(String urlMemo) {
-        return url.name.like("%" + urlMemo + "%");
-    }
+	private BooleanExpression urlMemoExpression(String urlMemo) {
+		return url.name.like("%" + urlMemo + "%");
+	}
 
-    private BooleanExpression tagNameExpression(String tagName) {
-        return tag.name.like("%" + tagName + "%");
-    }
+	private BooleanExpression tagNameExpression(String tagName) {
+		return tag.name.like("%" + tagName + "%");
+	}
 
 	private BooleanExpression categoryIdExpression(Long categoryId) {
 		if (categoryId == null) {
