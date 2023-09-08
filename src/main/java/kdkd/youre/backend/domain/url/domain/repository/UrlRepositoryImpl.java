@@ -23,11 +23,32 @@ public class UrlRepositoryImpl implements UrlCustomRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	private BooleanExpression urlKeywordExpression(String urlKeyword) {
-		return url.name.like("%" + urlKeyword + "%")
-			.or(tag.name.like("%" + urlKeyword + "%"))
-			.or(url.memo.like("%" + urlKeyword + "%"));
+	private BooleanExpression urlKeywordExpression(String urlKeyword, String keywordRange) {  // TODO: 추후 keywordRange를 String 배열로 교체
+        if(keywordRange.equals("name")) { // TODO: 추후 enum으로 교체
+            return urlNameExpression(urlKeyword);
+        }
+        if(keywordRange.equals("memo")) {
+            return urlMemoExpression(urlKeyword);
+        }
+		if(keywordRange.equals("tag")) {
+            return tagNameExpression(urlKeyword);
+        }
+        return urlNameExpression(urlKeyword)
+            .or(urlMemoExpression(urlKeyword))
+            .or(tagNameExpression(urlKeyword));
 	}
+
+    private BooleanExpression urlNameExpression(String urlName) {
+        return url.name.like("%" + urlName + "%");
+    }
+
+    private BooleanExpression urlMemoExpression(String urlMemo) {
+        return url.name.like("%" + urlMemo + "%");
+    }
+
+    private BooleanExpression tagNameExpression(String tagName) {
+        return tag.name.like("%" + tagName + "%");
+    }
 
 	private BooleanExpression categoryIdExpression(Long categoryId) {
 		if (categoryId == null) {
@@ -53,7 +74,7 @@ public class UrlRepositoryImpl implements UrlCustomRepository {
 	public List<Url> findBySearchWord(Member member, UrlFindAllParam params, Pageable pageable) {
 
 		OrderSpecifier<?> orderSpecifier = createOrderSpecifier(params.getOrder());
-		BooleanExpression urlKeywordExpression = urlKeywordExpression(params.getUrlKeyword());
+		BooleanExpression urlKeywordExpression = urlKeywordExpression(params.getUrlKeyword(), params.getKeywordRange());
 		BooleanExpression categoryIdExpression = categoryIdExpression(params.getCategoryId());
 		BooleanExpression isWatchedExpression = isWatchedBooleanExpression(params.getIsWatched());
 
